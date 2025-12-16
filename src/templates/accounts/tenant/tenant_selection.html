@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Organization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-white to-blue-50">
+    <div class="min-h-screen py-12 px-4">
+        <!-- Header -->
+        <div class="max-w-6xl mx-auto mb-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-900">Select Organization</h1>
+                    <p class="text-gray-600 mt-2">Choose which organization you want to manage</p>
+                </div>
+                <a href="{% url 'logout' %}" class="bg-white border-2 border-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-50 transition font-semibold">
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Tenants Grid -->
+        <div class="max-w-6xl mx-auto">
+            {% if tenants %}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for tenant in tenants %}
+                    <a href="http://localhost:8000/users/tenant_homepage/{{tenant.schema_name}}" 
+                       class="block bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-1 overflow-hidden group">
+                        <!-- Card Header -->
+                        <div class="bg-gradient-to-r from-indigo-600 to-blue-600 p-6 text-white">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="bg-white bg-opacity-20 p-3 rounded-lg">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                    </svg>
+                                </div>
+                                {% if tenant.active %}
+                                <span class="bg-green-400 text-green-900 px-3 py-1 rounded-full text-xs font-bold">Active</span>
+                                {% else %}
+                                <span class="bg-red-400 text-red-900 px-3 py-1 rounded-full text-xs font-bold">Inactive</span>
+                                {% endif %}
+                            </div>
+                            <h3 class="text-2xl font-bold truncate">{{ tenant.subdomain }}</h3>
+                            <p class="text-indigo-100 text-sm mt-1">{{ tenant.subdomain }}.localhost:8000</p>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="p-6">
+                            <div class="space-y-3 mb-4">
+                                <div class="flex items-center text-sm">
+                                    <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span class="text-gray-600">Created: <strong class="text-gray-900">{{ tenant.timestamp|date:"M d, Y" }}</strong></span>
+                                </div>
+                                {% if tenant.active_at %}
+                                <div class="flex items-center text-sm">
+                                    <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-gray-600">Active since: <strong class="text-gray-900">{{ tenant.active_at|date:"M d, Y" }}</strong></span>
+                                </div>
+                                {% endif %}
+                                <div class="flex items-center text-sm">
+                                    <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                                    </svg>
+                                    <span class="text-gray-600">Schema: <code class="text-xs bg-gray-100 px-2 py-1 rounded">{{ tenant.schema_name|truncatechars:20 }}</code></span>
+                                </div>
+                            </div>
+
+                            <!-- Action Button -->
+                            <div class="pt-4 border-t border-gray-200">
+                                <div class="flex items-center justify-between text-indigo-600 group-hover:text-indigo-700 font-semibold">
+                                    <span>Manage Organization</span>
+                                    <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <!-- Create New Organization -->
+                <div class="mt-8 text-center">
+                    <a href="{% url 'signupp' %}" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition font-bold shadow-lg hover:shadow-xl">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Create New Organization
+                    </a>
+                </div>
+            {% else %}
+                <!-- No Tenants -->
+                <div class="bg-white rounded-2xl shadow-lg p-12 text-center max-w-2xl mx-auto">
+                    <div class="bg-gray-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-3">No Organizations Yet</h2>
+                    <p class="text-gray-600 mb-6">Create your first organization to get started</p>
+                    <a href="{% url 'signupp' %}" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl hover:from-indigo-700 hover:to-blue-700 transition font-bold shadow-lg hover:shadow-xl">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Create Your First Organization
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

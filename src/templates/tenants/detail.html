@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+{% block head_title %}Detail view of Tenants - {{ block.super }}{% endblock head_title %}
+
+{% block content %}
+    <div>
+        {{ instance.schema_name }} -  {{ instance.subdomain }}
+    </div>
+    {% if instance.active_at %}
+         <div>
+            Active at -  {{ instance.active_at }}
+        </div>
+    {% endif %}
+    {% if instance.inactive_at %}
+        <div>
+            Inactive at -  {{ instance.inactive_at }}
+        </div>
+    {% endif %}
+    Detail view of Enterprise Users - 
+    {% for instance in enterprise_users %}
+
+            <li>{{ instance.pk }}-{{ instance.username }}</li>
+
+            {% endfor %}
+{% endblock content %}
+

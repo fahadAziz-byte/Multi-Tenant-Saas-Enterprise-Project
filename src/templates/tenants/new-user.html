@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+
+{% block head_title %}Form for creating user in tenant owner  - {{ owner_name }}{% endblock head_title %}
+
+
+{% block content %}
+    <h1 class="text-lg font-medium">Form for creating enterprise users  - {{ owner_name }}</h1>
+    <form action="." method="POST">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create User</button>
+    </form>
+
+{% endblock content %}
