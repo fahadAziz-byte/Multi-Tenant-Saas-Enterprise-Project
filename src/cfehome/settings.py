@@ -25,10 +25,10 @@ SECRET_KEY = config("DJANGO_SECRET_KEY")
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 
 ALLOWED_HOSTS = [
+    ".up.railway.app",
     ".railway.app",
-    "localhost",
-    "127.0.0.1",
 ]
+
 
 # --------------------------------------------------
 # APPLICATIONS
@@ -184,27 +184,32 @@ STORAGES = {
 # SESSION & CSRF (CRITICAL)
 # --------------------------------------------------
 
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = "None"
+    CSRF_COOKIE_SAMESITE = "None"
+else:
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+
 if DEBUG:
     SESSION_COOKIE_DOMAIN = None
     CSRF_COOKIE_DOMAIN = None
-
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
 
     CSRF_TRUSTED_ORIGINS = [
         "http://localhost:8000",
         "http://*.localhost:8000",
     ]
 else:
-    SESSION_COOKIE_DOMAIN = ".railway.app"
-    CSRF_COOKIE_DOMAIN = ".railway.app"
-
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_DOMAIN = ".up.railway.app"
+    CSRF_COOKIE_DOMAIN = ".up.railway.app"
 
     CSRF_TRUSTED_ORIGINS = [
-        "https://*.railway.app",
+    "https://*.up.railway.app",
     ]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
