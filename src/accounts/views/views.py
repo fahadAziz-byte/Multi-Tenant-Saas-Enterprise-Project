@@ -60,7 +60,7 @@ class TenantLoginView(View):
         # ==========================================
         # MAIN DOMAIN LOGIN (Tenant Owner)
         # ==========================================
-        if subdomain in ["localhost", None] or not request.subdomain:
+        if subdomain in ["localhost" ,"scalesphere", None] or not request.subdomain:
             print(f"[LOGIN] Main domain login attempt for: {username}")
             
             from helpers.db.schemas import use_public_schema
