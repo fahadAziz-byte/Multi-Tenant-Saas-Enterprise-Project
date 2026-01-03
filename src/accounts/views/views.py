@@ -44,6 +44,10 @@ def get_tenant_from_subdomain(request):
 
 class TenantLoginView(View):
     def get(self, request):
+        print("IS_SECURE:", request.is_secure())
+        print("SCHEME:", request.scheme)
+        print("HOST:", request.get_host())
+
         return render(request, 'accounts/login.html')
     
     def post(self, request):
