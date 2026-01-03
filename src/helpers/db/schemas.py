@@ -99,7 +99,7 @@ def use_public_schema(revert_schema_name=None,revert_schema=False):
 
 def get_schema_name(subdomain=None):
     schema_name='public'
-    if subdomain is None or subdomain=="localhost":
+    if subdomain is None or subdomain=="localhost" or subdomain=="scalesphere":
         activate_tenant_schema(schema_name)
         return schema_name,True,"public"
     cache_value=cache.get(subdomain)
