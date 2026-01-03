@@ -118,7 +118,7 @@ def get_schema_name(subdomain=None):
                 return "public",False,"public"
             except Exception as e:
                 print('Exception occured ==>',e)
-            cache_ttl=60
+            cache_ttl=600  # Cache timeout in seconds (e.g., 10 minutes)
             cache.set(subdomain,schema_name,cache_ttl)
             print('cache miss for subdomain ',subdomain,' and schema name : ',schema_name)
     return schema_name,True,subdomain
