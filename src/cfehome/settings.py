@@ -200,7 +200,7 @@ if DEBUG:
         "http://localhost:8000",
     ]
 
-else:
+if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
@@ -214,6 +214,9 @@ else:
         "https://scalesphere.up.railway.app",
         "https://*.up.railway.app",
     ]
+
+    USE_X_FORWARDED_HOST = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # --------------------------------------------------
 # EMAIL

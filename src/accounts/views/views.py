@@ -153,7 +153,7 @@ class TenantSignupView(View):
         subdomain = host.split('.')[0]
 
         #for tenants signup get page
-        if subdomain in ["localhost", None] or not request.subdomain:
+        if subdomain in ["localhost", "scalesphere"] or not request.subdomain:
             return render(request,'accounts/tenant/tenant_signup.html')
         else:
             from accounts.models import Department
