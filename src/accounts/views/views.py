@@ -174,7 +174,7 @@ class TenantSignupView(View):
         subdomain = host.split('.')[0]
 
         #for tenants signup post request
-        if subdomain in ["localhost", None] or not request.subdomain:
+        if subdomain in ["localhost", "scalesphere"] or not request.subdomain:
             sub=request.POST.get('subdomain')
             username = request.POST.get('username')
             email = request.POST.get('email')
@@ -207,7 +207,7 @@ class TenantSignupView(View):
             context={
                 'subdomain':sub,
                 'username':username,
-                'tenant_url':f'http://{sub}.localhost:8000/users/tenant_homepage'
+                'tenant_url':f'http://localhost:8000/users/tenant_homepage/{newTenantObj.schema_name}'
             }
             return render(request,'accounts/tenant/tenant_signup_success.html',context)
 

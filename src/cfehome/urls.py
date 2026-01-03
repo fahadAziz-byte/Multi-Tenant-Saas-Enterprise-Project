@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from .views import LandingPageView
 urlpatterns = [
-    path('',LandingPageView,name='landingpage')
+    path('', LandingPageView ,name='landingpage'),
     path('users/', include('accounts.urls')),
     path('users/', include('allauth.urls')),
     path('tenants/', include('tenants.urls')),

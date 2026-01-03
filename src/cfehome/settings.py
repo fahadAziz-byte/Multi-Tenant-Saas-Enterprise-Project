@@ -25,6 +25,8 @@ SECRET_KEY = config("DJANGO_SECRET_KEY")
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 
 ALLOWED_HOSTS = [
+    ".localhost",
+    "localhost",
     ".up.railway.app",
     ".railway.app",
 ]

@@ -1,6 +1,5 @@
 from django.urls import path
 from .tenant_views import hr_approval_list,hr_approval_detail,department_detail
-from .views import tenant_detail_view
 urlpatterns = [
     path('hr-approvals/<str:schema_name>', hr_approval_list, name='hr-approval-list'),
     path('hr-approval/<str:schema_name>/<uuid:application_id>/', hr_approval_detail, name='hr-approval-detail'),
