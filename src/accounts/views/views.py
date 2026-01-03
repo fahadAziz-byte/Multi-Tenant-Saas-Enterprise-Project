@@ -42,6 +42,10 @@ def get_tenant_from_subdomain(request):
 # Simple Login View
 # ============================
 
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
+
+@method_decorator(ensure_csrf_cookie, name='dispatch')
 class TenantLoginView(View):
     def get(self, request):
         print("IS_SECURE:", request.is_secure())
