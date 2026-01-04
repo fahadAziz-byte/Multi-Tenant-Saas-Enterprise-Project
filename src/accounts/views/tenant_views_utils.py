@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from accounts.models import Account, Department, HRProfile, EmployeeProfile
 from django.db.models import Count, Q
+from decouple import config
 
 
 @login_required

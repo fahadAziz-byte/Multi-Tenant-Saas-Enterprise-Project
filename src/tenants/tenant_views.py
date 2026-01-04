@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 from helpers.db.schemas import use_public_schema,get_schema_name,activate_tenant_schema
 from tenants.models import Tenants
 from django.conf import settings
+from decouple import config
 PRODUCTION_BASE_URL=settings.PRODUCTION_BASE_URL
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 

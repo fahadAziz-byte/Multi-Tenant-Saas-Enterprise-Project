@@ -13,6 +13,7 @@ from django.conf import settings
 from django.db import models
 from datetime import date
 from django.contrib.auth import get_user_model
+from decouple import config
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 PRODUCTION_BASE_URL=settings.PRODUCTION_BASE_URL
 # ============================
