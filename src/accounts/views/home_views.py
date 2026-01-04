@@ -17,8 +17,8 @@ from django.db.models import Count
 @login_required
 def tenant_home(request):
     """Tenant owner dashboard showing departments overview"""
-    if not request.tenant:
-        return HttpResponse("Sorry! You can only access by your enterprise subdomain")
+    if not (request.subdomain=="localhost" or request.subdomain=="scalesphere"):
+        return HttpResponse("Sorry! You can only access by your main domain")
     
     try:
         account = Account.objects.get(user=request.user)
@@ -46,7 +46,7 @@ def tenant_home(request):
         total_departments = departments.count()
         
         context = {
-            'tenant_name': request.tenant.subdomain,
+            'tenant_name': request.subdomain,
             'username': request.user.username,
             'departments': departments,
             'pending_hr_approvals': pending_hr_approvals,
@@ -70,12 +70,8 @@ def tenant_home(request):
 def employee_home(request):
     host = request.get_host().split(':')[0]
     subdomain = host.split('.')[0]
-    if request.subdomain!=subdomain:
-        request.subdomain=None
-        tenant = get_tenant_from_subdomain(request)
-        print("Went to public to findout out subdomain which is : ",tenant.subdomain)
-        if not tenant:
-            return HttpResponse("Sorry! You can only access by your enterprise subdomain")
+    if request.subdomain in ["localhost","scalesphere"]:
+        return HttpResponse("Sorry! You can only access by your enterprise subdomain")
     
     try:
         print(f'Request User before accessing employee account {request.user}')
@@ -134,7 +130,7 @@ def employee_home(request):
 @login_required
 def hr_home(request):
     # Tenant already set by middleware - no need for manual checks
-    if not request.subdomain:
+    if request.subdomain in ["localhost","scalesphere"]:
         return HttpResponse("Sorry! You can only access by your enterprise subdomain")
     
     try:

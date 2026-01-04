@@ -12,7 +12,8 @@ from datetime import datetime, timedelta
 from helpers.db.schemas import use_public_schema,get_schema_name,activate_tenant_schema
 from tenants.models import Tenants
 from django.conf import settings
-
+PRODUCTION_BASE_URL=settings.PRODUCTION_BASE_URL
+DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 
 def tenant_selection(request):
     """Show list of tenants owned by this user"""
@@ -25,15 +26,17 @@ def tenant_selection(request):
     # If only one tenant, redirect directly
     if tenants.count() == 1:
         tenant = tenants.first()
-        return redirect(f"http://localhost:8000/users/tenant_homepage/{tenant.schema_name}")
-    
+        if DEBUG:
+            return redirect(f"http://localhost:8000/users/tenant_homepage/{tenant.schema_name}")
+        else:
+            return redirect(f"{PRODUCTION_BASE_URL}/users/tenant_homepage/{tenant.schema_name}")
     context = {'tenants': tenants}
     return render(request, 'accounts/tenant/tenant_selection.html', context)
 
 
 def tenant_home(request,schema_name):
     """Tenant owner dashboard"""
-    if request.subdomain in ['localhost','lvh']:
+    if request.subdomain in ['localhost','scalesphere']:
         print("Accessing through ",request.subdomain)
     
     if not request.user.is_superuser:
@@ -111,7 +114,7 @@ def tenant_home(request,schema_name):
 @login_required
 def hr_approval_list(request,schema_name):
     """View all pending HR applications"""
-    if not request.subdomain or request.subdomain=='localhost' or request.subdomain=='lvh':
+    if not request.subdomain or request.subdomain=='localhost' or request.subdomain=='scalesphere':
         print("Accessing hr approval list for tenant owner though local host")
     
     if not request.user.is_superuser:
@@ -153,8 +156,8 @@ def hr_approval_list(request,schema_name):
 @login_required
 def hr_approval_detail(request,schema_name, application_id):
     """View and approve/reject HR application"""
-    if request.subdomain=='localhost':
-        print("Accessing hr approval detail through localhost")
+    if request.subdomain=='localhost' or request.subdomain=='scalesphere':
+        print(f"Accessing hr approval detail through {request.subdomain}")
     
     if not request.user.is_superuser:
         print('user : ',request.user)
@@ -321,8 +324,8 @@ If you have any questions, please contact the organization administrator.
 @login_required
 def department_detail(request,schema_name, department_id):
     """View department details with HRs and Employees"""
-    if request.subdomain=='localhost':
-        print("You are accesing department detail through localhost")
+    if request.subdomain=='localhost' or request.subdomain=='scalesphere':
+        print(f"You are accesing department detail through {request.subdomain}")
     
     if not request.user.is_superuser:
         print('user : ',request.user)

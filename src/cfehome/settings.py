@@ -23,14 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
-
+PRODUCTION_BASE_URL="https://scalesphere.up.railway.app"
 ALLOWED_HOSTS = [
     ".localhost",
     "localhost",
     ".up.railway.app",
     ".railway.app",
 ]
-
 
 # --------------------------------------------------
 # APPLICATIONS

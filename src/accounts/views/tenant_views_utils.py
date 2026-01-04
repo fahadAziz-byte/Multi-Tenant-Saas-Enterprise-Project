@@ -39,7 +39,7 @@ def department_detail(request, department_id):
         ).select_related('account__user')
         
         context = {
-            'tenant_name': request.tenant.subdomain,
+            'tenant_name': request.subdomain,
             'department': department,
             'hr_profiles': hr_profiles,
             'admin_hrs': admin_hrs,
@@ -82,7 +82,7 @@ def hr_approval_list(request):
         ).select_related('user', 'hrprofile', 'approved_by').order_by('-approved_at')[:20]
         
         context = {
-            'tenant_name': request.tenant.subdomain,
+            'tenant_name': request.subdomain,
             'pending_hrs': pending_hrs,
             'reviewed_hrs': reviewed_hrs,
         }
@@ -143,7 +143,7 @@ def hr_approval_detail(request, account_id):
         managed_departments = hr_profile.departments.all()
         
         context = {
-            'tenant_name': request.tenant.subdomain,
+            'tenant_name': request.subdomain,
             'hr_account': hr_account,
             'hr_profile': hr_profile,
             'managed_departments': managed_departments,

@@ -11,18 +11,15 @@ from datetime import date
 # Request from employee to correct his/her attendance 
 # ============================
     
-
+@login_required
+@login_required
 def request_attendance_correction(request):
     from datetime import date
     
     host = request.get_host().split(':')[0]
     subdomain = host.split('.')[0]
-    if request.subdomain!=subdomain:
-        request.subdomain=None
-        tenant = get_tenant_from_subdomain(request)
-        print("Went to public to findout out subdomain which is : ",tenant.subdomain)
-        if not tenant:
-            return HttpResponse("Sorry! You can only access by your enterprise subdomain")
+    if request.subdomain in ["localhost","scalesphere"]:
+        return HttpResponse("Sorry! You can only access by your enterprise subdomain")
     print("printing before creating account the request.user : ",request.user)
     account = Account.objects.get(user=request.user)
     

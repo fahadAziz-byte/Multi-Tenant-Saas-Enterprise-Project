@@ -13,6 +13,8 @@ from django.conf import settings
 from django.db import models
 from datetime import date
 from django.contrib.auth import get_user_model
+DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
+PRODUCTION_BASE_URL=settings.PRODUCTION_BASE_URL
 # ============================
 # Helper function to get tenant
 # ============================
@@ -211,11 +213,14 @@ class TenantSignupView(View):
                 owner=newUser,
                 subdomain=sub,
             )
-
+            if DEBUG:
+                tenant_url=f'http://localhost:8000/users/tenant_homepage/{newTenantObj.schema_name}'
+            else:
+                tenant_url=f'{PRODUCTION_BASE_URL}/users/tenant_homepage/{newTenantObj.schema_name}'
             context={
                 'subdomain':sub,
                 'username':username,
-                'tenant_url':f'http://localhost:8000/users/tenant_homepage/{newTenantObj.schema_name}'
+                'tenant_url':tenant_url
             }
             return render(request,'accounts/tenant/tenant_signup_success.html',context)
 
