@@ -112,7 +112,7 @@ def tenant_home(request,schema_name):
         traceback.print_exc()
         return HttpResponse(f"Error loading page: {str(e)}")
 
-@login_required
+
 def hr_approval_list(request,schema_name):
     """View all pending HR applications"""
     if not request.subdomain or request.subdomain=='localhost' or request.subdomain=='scalesphere':
@@ -154,7 +154,7 @@ def hr_approval_list(request,schema_name):
         traceback.print_exc()
         return HttpResponse(f"Error loading page: {str(e)}")
 
-@login_required
+
 def hr_approval_detail(request,schema_name, application_id):
     """View and approve/reject HR application"""
     if request.subdomain=='localhost' or request.subdomain=='scalesphere':
@@ -322,11 +322,13 @@ If you have any questions, please contact the organization administrator.
         traceback.print_exc()
         return HttpResponse(f"Error: {str(e)}")
 
-@login_required
+
 def department_detail(request,schema_name, department_id):
     """View department details with HRs and Employees"""
-    if request.subdomain=='localhost' or request.subdomain=='scalesphere':
-        print(f"You are accesing department detail through {request.subdomain}")
+    if not(request.subdomain=='localhost' or request.subdomain=='scalesphere'):
+        return HttpResponse("Only tenant owners can access this page")
+
+    print(f"You are accesing department detail through {request.subdomain}")
     
     if not request.user.is_superuser:
         print('user : ',request.user)

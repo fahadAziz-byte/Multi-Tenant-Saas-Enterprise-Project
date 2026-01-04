@@ -11,8 +11,7 @@ from datetime import date
 # Request from employee to correct his/her attendance 
 # ============================
     
-@login_required
-@login_required
+
 def request_attendance_correction(request):
     from datetime import date
     
@@ -22,9 +21,10 @@ def request_attendance_correction(request):
         return HttpResponse("Sorry! You can only access by your enterprise subdomain")
     print("printing before creating account the request.user : ",request.user)
     account = Account.objects.get(user=request.user)
-    
+    if not account:
+        return HttpResponse("You are not our user to access this page")
     if account.role.upper() != "EMPLOYEE":
-        return HttpResponse("Access denied!")
+        return HttpResponse("You are not authorized as an Employee to access this page")
     
     from accounts.models import EmployeeProfile
     from attendance.models import AttendanceRequest

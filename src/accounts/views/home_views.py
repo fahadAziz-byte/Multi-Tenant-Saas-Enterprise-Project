@@ -66,7 +66,7 @@ def tenant_home(request):
         return HttpResponse(f"Error loading page: {str(e)}")
 
 
-@login_required
+
 def employee_home(request):
     host = request.get_host().split(':')[0]
     subdomain = host.split('.')[0]
@@ -78,9 +78,9 @@ def employee_home(request):
         account = Account.objects.get(user=request.user)
         if account:
             if account.role.upper() != "EMPLOYEE":
-                return HttpResponse("Access denied! You are not an employee.")
+                return HttpResponse("Access denied! You are not authorized as an employee to access this page.")
         elif not account:
-            return HttpResponse("Access denied! You are not an employee.")
+            return HttpResponse("Access denied! You are not authorized as an employee to access this page.")
         
         
         employee_profile = EmployeeProfile.objects.get(account=account)
@@ -127,7 +127,7 @@ def employee_home(request):
         return HttpResponse(f"Error loading page: {str(e)}")
 
 
-@login_required
+
 def hr_home(request):
     # Tenant already set by middleware - no need for manual checks
     if request.subdomain in ["localhost","scalesphere"]:
@@ -138,7 +138,7 @@ def hr_home(request):
         account = Account.objects.get(user=request.user)
         if account:
             if account.role.upper() != "HR":
-                return HttpResponse("Access denied! You are not an HR.")
+                return HttpResponse("Access denied! You are not authorized as an HR to access this page.")
         elif not account:
             return HttpResponse("Access denied! You are not an HR.")
         
