@@ -209,8 +209,8 @@ if not DEBUG:
     SESSION_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_SAMESITE = "None"
 
-    SESSION_COOKIE_DOMAIN = ".up.railway.app"
-    CSRF_COOKIE_DOMAIN = ".up.railway.app"
+    # SESSION_COOKIE_DOMAIN = ".up.railway.app"
+    # CSRF_COOKIE_DOMAIN = ".up.railway.app"
 
     CSRF_TRUSTED_ORIGINS = [
         "https://scalesphere.up.railway.app",
