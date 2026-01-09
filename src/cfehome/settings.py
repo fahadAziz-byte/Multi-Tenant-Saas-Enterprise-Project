@@ -23,10 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
-PRODUCTION_BASE_URL="https://scalesphere.up.railway.app"
+PRODUCTION_BASE_URL="https://scalesphere.space"
 ALLOWED_HOSTS = [
     ".localhost",
     "localhost",
+    "scalesphere.space",
+    ".scalesphere.space",
     ".up.railway.app",
     ".railway.app",
 ]
@@ -212,8 +214,8 @@ if not DEBUG:
     # CSRF_COOKIE_DOMAIN = ".up.railway.app"
 
     CSRF_TRUSTED_ORIGINS = [
-        "https://scalesphere.up.railway.app",
-        "https://*.up.railway.app",
+        "https://scalesphere.space",
+        "https://*.scalesphere.space",
     ]
 
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
