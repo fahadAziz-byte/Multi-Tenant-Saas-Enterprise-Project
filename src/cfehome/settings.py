@@ -210,8 +210,8 @@ if not DEBUG:
     SESSION_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_SAMESITE = "None"
 
-    SESSION_COOKIE_DOMAIN = ".space"
-    CSRF_COOKIE_DOMAIN = ".space"
+    SESSION_COOKIE_DOMAIN = ".scalesphere.space"
+    CSRF_COOKIE_DOMAIN = ".scalesphere.space"
 
     CSRF_TRUSTED_ORIGINS = [
         "https://scalesphere.space",
