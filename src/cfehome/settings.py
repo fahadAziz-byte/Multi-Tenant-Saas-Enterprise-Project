@@ -204,6 +204,15 @@ if DEBUG:
     ]
 
 if not DEBUG:
+    # In production block (if not DEBUG):
+    SESSION_COOKIE_SECURE = True  # Already set, confirm
+    SESSION_COOKIE_SAMESITE = 'Lax'  # Try this instead of 'None' first - safer for same-site
+    CSRF_COOKIE_SAMESITE = 'Lax'
+
+    # Add if missing:
+    SESSION_COOKIE_AGE = 1209600  # 2 weeks
+    SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+    
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
