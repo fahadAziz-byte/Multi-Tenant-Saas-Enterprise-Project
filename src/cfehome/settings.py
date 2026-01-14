@@ -204,23 +204,18 @@ if DEBUG:
     ]
 
 if not DEBUG:
-    # In production block (if not DEBUG):
-    SESSION_COOKIE_SECURE = True  # Already set, confirm
-    SESSION_COOKIE_SAMESITE = 'Lax'  # Try this instead of 'None' first - safer for same-site
+    SESSION_COOKIE_DOMAIN = '.scalesphere.space'  # Note leading dot
+    CSRF_COOKIE_DOMAIN = '.scalesphere.space'     # Leading dot critical
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'Lax'  # Safer than None, works for same-site + subdomains
     CSRF_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_HTTPONLY = True   # Already set globally
+
 
     # Add if missing:
     SESSION_COOKIE_AGE = 1209600  # 2 weeks
     SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-    
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-
-    SESSION_COOKIE_SAMESITE = "None"
-    CSRF_COOKIE_SAMESITE = "None"
-
-    SESSION_COOKIE_DOMAIN = ".scalesphere.space"
-    CSRF_COOKIE_DOMAIN = ".scalesphere.space"
 
     CSRF_TRUSTED_ORIGINS = [
         "https://scalesphere.space",
