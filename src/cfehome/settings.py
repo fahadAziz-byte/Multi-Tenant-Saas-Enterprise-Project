@@ -202,29 +202,27 @@ if DEBUG:
     CSRF_TRUSTED_ORIGINS = [
         "http://localhost:8000",
     ]
-
 if not DEBUG:
-    SESSION_COOKIE_DOMAIN = '.scalesphere.space'  # Note leading dot
-    CSRF_COOKIE_DOMAIN = '.scalesphere.space'     # Leading dot critical
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SAMESITE = 'Lax'  # Safer than None, works for same-site + subdomains
+    
+    # CRITICAL: Use Lax for Cloudflare/Railway proxy compatibility
+    SESSION_COOKIE_SAMESITE = 'Lax'  
     CSRF_COOKIE_SAMESITE = 'Lax'
-    SESSION_COOKIE_HTTPONLY = True   # Already set globally
-
-
-    # Add if missing:
-    SESSION_COOKIE_AGE = 1209600  # 2 weeks
-    SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-
+    
+    # EXACT MATCH - NO leading dot for Cloudflare proxy
+    SESSION_COOKIE_DOMAIN = 'scalesphere.space'  
+    CSRF_COOKIE_DOMAIN = 'scalesphere.space'
+    
     CSRF_TRUSTED_ORIGINS = [
         "https://scalesphere.space",
         "https://*.scalesphere.space",
     ]
-
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    
+    # Railway/Cloudflare proxy headers
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     USE_X_FORWARDED_HOST = True
-    SECURE_SSL_REDIRECT = False
+    SECURE_SSL_REDIRECT = False  # Cloudflare handles this
 
 
 # --------------------------------------------------
