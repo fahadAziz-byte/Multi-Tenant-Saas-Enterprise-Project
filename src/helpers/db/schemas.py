@@ -102,11 +102,11 @@ def get_schema_name(subdomain=None):
     if subdomain is None or subdomain=="localhost" or subdomain=="scalesphere":
         activate_tenant_schema(schema_name)
         return schema_name,True,"public"
-    cache_value=cache.get(subdomain)
-    if cache_value:
-        print('cache hit')
-        print('cache value : ',cache_value)
-        return cache_value,True,subdomain
+    # cache_value=cache.get(subdomain)
+    # if cache_value:
+    #     print('cache hit')
+    #     print('cache value : ',cache_value)
+    #     return cache_value,True,subdomain
     else :
         with use_public_schema():
             Tenants=apps.get_model('tenants','Tenants')
@@ -118,7 +118,7 @@ def get_schema_name(subdomain=None):
                 return "public",False,"public"
             except Exception as e:
                 print('Exception occured ==>',e)
-            cache_ttl=600  # Cache timeout in seconds (e.g., 10 minutes)
-            cache.set(subdomain,schema_name,cache_ttl)
-            print('cache miss for subdomain ',subdomain,' and schema name : ',schema_name)
+            # cache_ttl=600  # Cache timeout in seconds (e.g., 10 minutes)
+            # cache.set(subdomain,schema_name,cache_ttl)
+            # print('cache miss for subdomain ',subdomain,' and schema name : ',schema_name)
     return schema_name,True,subdomain
