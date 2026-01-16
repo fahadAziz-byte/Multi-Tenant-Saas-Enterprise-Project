@@ -30,7 +30,7 @@ def tenant_selection(request):
         if DEBUG:
             return redirect(f"http://localhost:8000/users/tenant_homepage/{tenant.schema_name}")
         else:
-            return redirect(f"{PRODUCTION_BASE_URL}/users/tenant_homepage/{tenant.schema_name}")
+            return redirect(f"{request.subdomain}.{PRODUCTION_BASE_URL}/users/tenant_homepage/{tenant.schema_name}")
     context = {'tenants': tenants}
     return render(request, 'accounts/tenant/tenant_selection.html', context)
 
