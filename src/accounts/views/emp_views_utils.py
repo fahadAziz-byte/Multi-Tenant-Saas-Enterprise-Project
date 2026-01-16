@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .views import get_tenant_from_subdomain
 from datetime import date
+from django.conf import settings
 # ============================
 # Request from employee to correct his/her attendance 
 # ============================
@@ -17,7 +18,7 @@ def request_attendance_correction(request):
     
     host = request.get_host().split(':')[0]
     subdomain = host.split('.')[0]
-    if request.subdomain in ["localhost","scalesphere"]:
+    if request.subdomain in ["localhost", settings.MAIN_SUBDOMAIN]:
         return HttpResponse("Sorry! You can only access by your enterprise subdomain")
     print("printing before creating account the request.user : ",request.user)
     account = Account.objects.get(user=request.user)

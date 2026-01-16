@@ -10,6 +10,8 @@ from .installed import (
     _CUSTOMER_INSTALLED_APPS
 )
 
+
+
 # --------------------------------------------------
 # BASE
 # --------------------------------------------------
@@ -23,7 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
+MAIN_SUBDOMAIN="app"
 PRODUCTION_BASE_URL="https://scalesphere.space"
+
 ALLOWED_HOSTS = [
     ".localhost",
     "localhost",

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.conf import settings
 from accounts.models import Account
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -11,7 +12,7 @@ from datetime import date
 # View all employees attendance
 @login_required
 def hr_view_attendance(request):
-    if request.subdomain=="localhost" or request.subdomain=="scalesphere":
+    if request.subdomain=="localhost" or request.subdomain==settings.MAIN_SUBDOMAIN:
         return HttpResponse("Sorry! You can only access by your enterprise subdomain")
     
     account = Account.objects.get(user=request.user)
@@ -69,7 +70,7 @@ def hr_view_attendance(request):
 # Mark attendance - with department check
 @login_required
 def hr_mark_attendance(request):
-    if request.subdomain=="localhost" or request.subdomain=="scalesphere":
+    if request.subdomain=="localhost" or request.subdomain==settings.MAIN_SUBDOMAIN:
         return HttpResponse("Sorry! You can only access by your enterprise subdomain")
     
     account = Account.objects.get(user=request.user)
@@ -126,7 +127,7 @@ def hr_mark_attendance(request):
 # Review requests - with department filtering
 @login_required
 def hr_review_requests(request):
-    if request.subdomain=="localhost" or request.subdomain=="scalesphere":
+    if request.subdomain=="localhost" or request.subdomain==settings.MAIN_SUBDOMAIN:
         return HttpResponse("Sorry! You can only access by your enterprise subdomain")
     
     account = Account.objects.get(user=request.user)
@@ -210,7 +211,7 @@ def hr_review_requests(request):
 @login_required
 def hr_employee_approval_list(request):
     """HR view to see pending employee applications"""
-    if request.subdomain=="localhost" or request.subdomain=="scalesphere":
+    if request.subdomain=="localhost" or request.subdomain==settings.MAIN_SUBDOMAIN:
         return HttpResponse("Sorry! You can only access by your enterprise subdomain")
     
     try:
@@ -267,7 +268,7 @@ def hr_employee_approval_list(request):
 @login_required
 def hr_employee_approval_detail(request, application_id):
     """HR view to approve/reject employee application"""
-    if request.subdomain=="localhost" or request.subdomain=="scalesphere":
+    if request.subdomain=="localhost" or request.subdomain==settings.MAIN_SUBDOMAIN:
         return HttpResponse("Sorry! You can only access by your enterprise subdomain")
     
     try:

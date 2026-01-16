@@ -3,6 +3,7 @@ from django.db import connection
 from .statements import ACTIVATE_SCHEMA_SQL,CREATE_SCHEMA_SQL
 from django.core.cache import cache
 from django.apps import apps
+from django.conf import settings
 DEFAULT_SCHEMA = "public"
 
 def does_schema_exists(schema_name):
@@ -99,7 +100,7 @@ def use_public_schema(revert_schema_name=None,revert_schema=False):
 
 def get_schema_name(subdomain=None):
     schema_name='public'
-    if subdomain is None or subdomain=="localhost" or subdomain=="scalesphere":
+    if subdomain is None or subdomain=="localhost" or subdomain==settings.MAIN_SUBDOMAIN:
         activate_tenant_schema(schema_name)
         return schema_name,True,"public"
     # cache_value=cache.get(subdomain)

@@ -37,7 +37,7 @@ def tenant_selection(request):
 
 def tenant_home(request,schema_name):
     """Tenant owner dashboard"""
-    if request.subdomain in ['localhost','scalesphere']:
+    if request.subdomain in ['localhost', settings.MAIN_SUBDOMAIN]:
         print("Accessing through ",request.subdomain)
     
     if not request.user.is_superuser:
@@ -115,7 +115,7 @@ def tenant_home(request,schema_name):
 
 def hr_approval_list(request,schema_name):
     """View all pending HR applications"""
-    if not request.subdomain or request.subdomain=='localhost' or request.subdomain=='scalesphere':
+    if not request.subdomain or request.subdomain=='localhost' or request.subdomain==settings.MAIN_SUBDOMAIN:
         print("Accessing hr approval list for tenant owner though local host")
     
     if not request.user.is_superuser:
@@ -157,7 +157,7 @@ def hr_approval_list(request,schema_name):
 
 def hr_approval_detail(request,schema_name, application_id):
     """View and approve/reject HR application"""
-    if request.subdomain=='localhost' or request.subdomain=='scalesphere':
+    if request.subdomain=='localhost' or request.subdomain==settings.MAIN_SUBDOMAIN:
         print(f"Accessing hr approval detail through {request.subdomain}")
     
     if not request.user.is_superuser:
@@ -325,7 +325,7 @@ If you have any questions, please contact the organization administrator.
 
 def department_detail(request,schema_name, department_id):
     """View department details with HRs and Employees"""
-    if not(request.subdomain=='localhost' or request.subdomain=='scalesphere'):
+    if not(request.subdomain=='localhost' or request.subdomain==settings.MAIN_SUBDOMAIN):
         return HttpResponse("Only tenant owners can access this page")
 
     print(f"You are accesing department detail through {request.subdomain}")

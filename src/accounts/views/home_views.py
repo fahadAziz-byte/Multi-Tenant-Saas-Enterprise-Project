@@ -7,6 +7,7 @@ from accounts.models import HRProfile, EmployeeProfile,Account,Department
 from attendance.models import Attendance, AttendanceRequest
 from datetime import datetime, timedelta
 from django.db.models import Count
+from django.conf import settings
 
 
 # ============================
@@ -17,7 +18,7 @@ from django.db.models import Count
 @login_required
 def tenant_home(request):
     """Tenant owner dashboard showing departments overview"""
-    if not (request.subdomain=="localhost" or request.subdomain=="scalesphere"):
+    if not (request.subdomain=="localhost" or request.subdomain==settings.MAIN_SUBDOMAIN):
         return HttpResponse("Sorry! You can only access by your main domain")
     
     try:
@@ -70,7 +71,7 @@ def tenant_home(request):
 def employee_home(request):
     host = request.get_host().split(':')[0]
     subdomain = host.split('.')[0]
-    if request.subdomain in ["localhost","scalesphere"]:
+    if request.subdomain in ["localhost", settings.MAIN_SUBDOMAIN]:
         return HttpResponse("Sorry! You can only access by your enterprise subdomain")
     
     try:
@@ -130,7 +131,7 @@ def employee_home(request):
 
 def hr_home(request):
     # Tenant already set by middleware - no need for manual checks
-    if request.subdomain in ["localhost","scalesphere"]:
+    if request.subdomain in ["localhost", settings.MAIN_SUBDOMAIN]:
         return HttpResponse("Sorry! You can only access by your enterprise subdomain")
     
     try:

@@ -16,6 +16,7 @@ from django.contrib.auth import get_user_model
 from decouple import config
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 PRODUCTION_BASE_URL=settings.PRODUCTION_BASE_URL
+MAIN_SUBDOMAIN=settings.MAIN_SUBDOMAIN
 # ============================
 # Helper function to get tenant
 # ============================
@@ -71,7 +72,7 @@ class TenantLoginView(View):
         # ==========================================
         # MAIN DOMAIN LOGIN (Tenant Owner)
         # ==========================================
-        if subdomain in ["localhost" ,"scalesphere", None] or not request.subdomain:
+        if subdomain in ["localhost", settings.MAIN_SUBDOMAIN, None] or not request.subdomain:
             print(f"[LOGIN] Main domain login attempt for: {username}")
             
             from helpers.db.schemas import use_public_schema
@@ -164,7 +165,7 @@ class TenantSignupView(View):
         subdomain = host.split('.')[0]
 
         #for tenants signup get page
-        if subdomain in ["localhost", "scalesphere"] or not request.subdomain:
+        if subdomain in ["localhost", settings.MAIN_SUBDOMAIN] or not request.subdomain:
             return render(request,'accounts/tenant/tenant_signup.html')
         else:
             from accounts.models import Department
@@ -185,7 +186,7 @@ class TenantSignupView(View):
         subdomain = host.split('.')[0]
 
         #for tenants signup post request
-        if subdomain in ["localhost", "scalesphere"] or not request.subdomain:
+        if subdomain in ["localhost", settings.MAIN_SUBDOMAIN] or not request.subdomain:
             sub=request.POST.get('subdomain')
             username = request.POST.get('username')
             email = request.POST.get('email')
@@ -217,7 +218,7 @@ class TenantSignupView(View):
             if DEBUG:
                 tenant_url=f'http://localhost:8000/users/tenant_homepage/{newTenantObj.schema_name}'
             else:
-                tenant_url=f'{PRODUCTION_BASE_URL}/users/tenant_homepage/{newTenantObj.schema_name}'
+                tenant_url=f'https://{subdomain}.{settings.PRODUCTION_BASE_URL}/users/tenant_homepage/{newTenantObj.schema_name}'
             context={
                 'subdomain':sub,
                 'username':username,
@@ -322,7 +323,7 @@ class TenantSignupView(View):
 
                             Please review and approve/reject this application in your HR dashboard.
 
-                            Login to review: http://{request.subdomain}.localhost:8000/users/hr/employee-approvals/
+                            Login to review: https://{request.subdomain}.{settings.PRODUCTION_BASE_URL}/users/hr/employee-approvals/
                         ''',
                         from_email=settings.EMAIL_HOST_USER,
                         recipient_list=hr_emails,
@@ -399,7 +400,7 @@ class TenantSignupView(View):
 
                             Please review and approve/reject this application in your tenant dashboard.
 
-                            Login to review: http://{request.subdomain}.localhost:8000/users/tenant/hr-approvals/
+                            Login to review: https://{request.subdomain}.{settings.PRODUCTION_BASE_URL}/users/tenant/hr-approvals/
                         ''',
                         from_email=settings.DEFAULT_FROM_EMAIL,
                         recipient_list=[owner.email],

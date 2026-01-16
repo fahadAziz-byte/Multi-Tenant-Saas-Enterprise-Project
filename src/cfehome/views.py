@@ -15,7 +15,7 @@ def LandingPageView(request):
     """Main landing page for the platform"""
     is_main_domain = False 
     if request.subdomain:
-        if request.subdomain in ['localhost','scalesphere']:
+        if request.subdomain in ['localhost', settings.MAIN_SUBDOMAIN]:
             is_main_domain=True
     context = { 'is_main_domain': is_main_domain, 'subdomain': request.subdomain }
     return render(request, 'accounts/landing_page.html', context)
