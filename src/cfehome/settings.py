@@ -47,19 +47,18 @@ CUSTOMER_INSTALLED_APPS = _CUSTOMER_INSTALLED_APPS
 # --------------------------------------------------
 # MIDDLEWARE
 # --------------------------------------------------
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    
+    # 1. First, identify the tenant and switch the database schema
+    "helpers.middleware.schemas.SchemaTenantMiddleware", 
 
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-
-    # Tenant resolution AFTER auth
-    "helpers.middleware.schemas.SchemaTenantMiddleware",
-
+    
     "django.contrib.messages.middleware.MessageMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -214,9 +213,8 @@ if not DEBUG:
     SESSION_COOKIE_SAMESITE = 'Lax'  
     CSRF_COOKIE_SAMESITE = 'Lax'
     
-    # EXACT MATCH - NO leading dot for Cloudflare proxy
-    SESSION_COOKIE_DOMAIN = 'scalesphere.space'  
-    CSRF_COOKIE_DOMAIN = 'scalesphere.space'
+    SESSION_COOKIE_DOMAIN = '.scalesphere.space'  
+    CSRF_COOKIE_DOMAIN = '.scalesphere.space'
     
     CSRF_TRUSTED_ORIGINS = [
         "https://scalesphere.space",
