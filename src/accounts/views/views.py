@@ -323,7 +323,7 @@ class TenantSignupView(View):
 
                             Please review and approve/reject this application in your HR dashboard.
 
-                            Login to review: https://{request.subdomain}.{settings.PRODUCTION_BASE_URL}/users/hr/employee-approvals/
+                            Login to review: https://{request.subdomain}.scalesphere.space/users/hr/employee-approvals/
                         ''',
                         from_email=settings.EMAIL_HOST_USER,
                         recipient_list=hr_emails,
@@ -400,7 +400,7 @@ class TenantSignupView(View):
 
                             Please review and approve/reject this application in your tenant dashboard.
 
-                            Login to review: https://{request.subdomain}.{settings.PRODUCTION_BASE_URL}/users/tenant/hr-approvals/
+                            Login to review: https://{request.subdomain}.scalesphere.space/users/tenant/hr-approvals/
                         ''',
                         from_email=settings.DEFAULT_FROM_EMAIL,
                         recipient_list=[owner.email],
