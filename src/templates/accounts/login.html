@@ -21,7 +21,7 @@
                     </svg>
                 </div>
                 <h2 class="text-3xl font-bold text-gray-900">Welcome Back</h2>
-                {% if request.subdomain == 'public' or request.subdomain == 'localhost' %}
+                {% if request.subdomain == 'public' or request.subdomain == 'localhost' or request.subdomain == 'app' %}
                     <p class="mt-2 text-sm text-gray-600">Sign in to your account as <strong>Tenant Owner</strong></p>
                 {% else %}
                     <p class="mt-2 text-sm text-gray-600">Sign in to your account as HR/Employee</p>
