@@ -33,8 +33,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "scalesphere.space",
     ".scalesphere.space",
-    ".up.railway.app",
-    ".railway.app",
+    ".onrender.com."
 ]
 
 # --------------------------------------------------
