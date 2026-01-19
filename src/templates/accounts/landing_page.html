@@ -40,12 +40,78 @@
                     <span class="text-2xl font-bold text-gray-800">EnterpriseHub</span>
                 </div>
 
+                    <!-- ========================================== -->
+                    <!-- INVALID TENANT NOTIFICATION MODAL          -->
+                    <!-- ========================================== -->
+                    {% if error_message %}
+                    <div id="error-notification-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        
+                        <!-- Backdrop (Darkens the site behind it, keeps site visible but unclickable) -->
+                        <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity"></div>
+
+                        <!-- Notification Card -->
+                        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center animate-fade-in-up border border-gray-100">
+                            
+                            <!-- Icon: Warning/Info -->
+                            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-orange-100 mb-6 animate-pulse">
+                                <svg class="h-8 w-8 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </div>
+
+                            <!-- Title -->
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">
+                                We couldn't find that organization
+                            </h3>
+
+                            <!-- Dynamic Error Message -->
+                            <div class="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-100">
+                                <p class="text-gray-600 text-sm leading-relaxed">
+                                    {{ error_message }}
+                                </p>
+                            </div>
+
+                            <p class="text-gray-500 text-xs mb-6">
+                                Don't worry! We have redirected you to our main home page where you can login or register.
+                            </p>
+
+                            <!-- Action Button -->
+                            <button onclick="closeErrorModal()" 
+                            class="w-full bg-gradient-to-r from-gray-800 to-gray-700 text-white px-6 py-3 rounded-xl hover:from-gray-900 hover:to-gray-800 transition font-bold shadow-lg flex items-center justify-center group">
+                            <span>Understood, Continue to Site</span>
+                            <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                            </button>
+                            
+                        </div>
+                    </div>
+
+                    <!-- JavaScript to handle closing the modal -->
+                    <script>
+                        function closeErrorModal() {
+                            const modal = document.getElementById('error-notification-modal');
+                            if (modal) {
+                                // Add a fade-out effect
+                                modal.style.opacity = '0';
+                                modal.style.transition = 'opacity 0.3s ease';
+                                
+                                // Remove from DOM after transition
+                                setTimeout(() => {
+                                    modal.remove();
+                                }, 300);
+                            }
+                        }
+                    </script>
+                    {% endif %}
+                    <!-- ========================================== -->
+
                 <!-- Navigation Links -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="#features" class="text-gray-600 hover:text-indigo-600 transition font-medium">Features</a>
                     <a href="#how-it-works" class="text-gray-600 hover:text-indigo-600 transition font-medium">How It Works</a>
                     <a href="#pricing" class="text-gray-600 hover:text-indigo-600 transition font-medium">Pricing</a>
-                    <a href="{% url 'loginn' %}" class="text-gray-600 hover:text-indigo-600 transition font-medium">Login</a>
+                    <a href="{% if error_message %}{{ main_host_url }}{% endif %}{% url 'loginn' %}"class="text-gray-600 hover:text-indigo-600 transition font-medium">Login</a>
                     <a href="{% url 'signupp' %}" class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-6 py-2 rounded-lg hover:from-indigo-700 hover:to-blue-700 transition font-semibold shadow-lg hover:shadow-xl">
                         Start Free Trial
                     </a>

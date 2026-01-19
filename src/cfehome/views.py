@@ -17,5 +17,8 @@ def LandingPageView(request):
     if request.subdomain:
         if request.subdomain in ['localhost', settings.MAIN_SUBDOMAIN]:
             is_main_domain=True
-    context = { 'is_main_domain': is_main_domain, 'subdomain': request.subdomain }
+    error_message = None
+    if request.valid_tenant==False:
+        error_message = "The subdomain you have entered does not correspond to a valid tenant. Please check the subdomain and try again."
+    context = { 'is_main_domain': is_main_domain, 'subdomain': request.subdomain, 'error_message': error_message, "main_host_url": f'https://{settings.MAIN_SUBDOMAIN}.scalesphere.space/users/user-login/' }
     return render(request, 'accounts/landing_page.html', context)

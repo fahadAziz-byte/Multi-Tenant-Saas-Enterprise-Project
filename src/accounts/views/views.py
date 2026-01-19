@@ -218,7 +218,7 @@ class TenantSignupView(View):
             if DEBUG:
                 tenant_url=f'http://localhost:8000/users/tenant_homepage/{newTenantObj.schema_name}'
             else:
-                tenant_url=f'https://{subdomain}.{settings.PRODUCTION_BASE_URL}/users/tenant_homepage/{newTenantObj.schema_name}'
+                tenant_url=f'https://{subdomain}.scalesphere.space/users/tenant_homepage/{newTenantObj.schema_name}'
             context={
                 'subdomain':sub,
                 'username':username,
@@ -233,7 +233,7 @@ class TenantSignupView(View):
             tenant = get_tenant_from_subdomain(request)
             if not tenant:
                 return HttpResponse("Sorry! You can only access by your enterprise subdomain")
-            print("Went to public to findout out subdomain which is : ",tenant.subdomain)
+            print("Went to public to findout out subdomain which is : ",request.subdomain)
 
         username = request.POST.get('username')
         first_name=request.POST.get('first_name')
