@@ -102,7 +102,7 @@ def get_schema_name(subdomain=None):
     schema_name='public'
     if subdomain is None or subdomain=="localhost" or subdomain==settings.MAIN_SUBDOMAIN:
         activate_tenant_schema(schema_name)
-        return schema_name,True,"public"
+        return schema_name,True,settings.MAIN_SUBDOMAIN
     cache_value=cache.get(subdomain)
     if cache_value:
         print('cache hit')
@@ -116,7 +116,7 @@ def get_schema_name(subdomain=None):
                 schema_name=obj.schema_name
             except Tenants.DoesNotExist:
                 print(subdomain," does not exist in public schema as a tenant")
-                return "public",False,"public"
+                return "public",False,settings.MAIN_SUBDOMAIN
             except Exception as e:
                 print('Exception occured ==>',e)
             cache_ttl=600  # Cache timeout in seconds (e.g., 10 minutes)
