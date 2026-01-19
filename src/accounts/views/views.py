@@ -416,7 +416,7 @@ class TenantSignupView(View):
                 'email': email,
                 'role': 'HR',
                 'tenant_name': request.subdomain,
-                'approver': owner.username,
+                'approver': 'the Tenant Owner',
             })
         
         return redirect('loginn')
