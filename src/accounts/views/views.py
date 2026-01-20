@@ -195,13 +195,13 @@ class TenantSignupView(View):
             if User.objects.filter(username=username).exists():
                 return render(request, 'accounts/signup.html', {
                     'error': 'Username already exists',
-                    'departments': departments
+                    'departments': None
                 })
     
             if User.objects.filter(email=email).exists():
                 return render(request, 'accounts/signup.html', {
                     'error': 'Email already exists',
-                    'departments': departments
+                    'departments': None
                 })
             newUser=User.objects.create(
                 username=username,
