@@ -125,7 +125,7 @@
 
             <!-- Footer Help Text -->
             <div class="mt-6 text-center">
-                {% if request.subdomain and request.subdomain != 'public' and request.subdomain != 'localhost' %}
+                {% if request.subdomain != 'public' and request.subdomain != 'localhost'  and request.subdomain != 'app' %}
                     <p class="text-sm text-gray-500">
                         Signing in to <strong class="text-gray-700">{{ request.subdomain }}</strong> organization
                     </p>

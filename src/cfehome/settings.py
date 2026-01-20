@@ -91,8 +91,6 @@ WSGI_APPLICATION = "cfehome.wsgi.application"
 # DATABASE
 # --------------------------------------------------
 
-DATABASE_ROUTERS = ['cfehome.router.TenantSyncRouter']
-
 DATABASE_URL = config("DATABASE_URL", default=None)
 CONN_MAX_AGE = config("CONN_MAX_AGE", cast=int, default=300)
 
