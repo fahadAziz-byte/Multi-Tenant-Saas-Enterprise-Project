@@ -1,4 +1,4 @@
-# 1. SHARED_APPS: Only for the Public schema (Global things)
+# 1. SHARED_APPS: Always active, provides the Global User/Login
 SHARED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -6,32 +6,25 @@ SHARED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    
-    # User / Auth
-    "accounts", # Your custom user app should stay shared for global login
-    "allauth_ui",
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.github',
-    
-    # The management app
-    "tenants", 
+    "accounts",    # USER stays in PUBLIC via the Router
+    "allauth",
+    "allauth.account",
+    "tenants",
+    # ... any others ...
 ]
 
-# 2. TENANT_APPS: Only for the specific client schemas
+# 2. TENANT_APPS: What migrations run when a new tenant house is built
 TENANT_APPS = [
+    "accounts",    # DEPARTMENTS will be created in TENANT via the Router
+    "approvals",
+    "attendance",
     "slippers",
     "widget_tweaks",
-    "approvals",
     "commando",
-    "attendance",
-    # Note: 'accounts' is NOT here because users are shared platform-wide
 ]
 
-# 3. Final Production list for Django settings
-# django-tenants (and similar engines) use these specifically
+# 3. Merged list for Django
 _INSTALLED_APPS = SHARED_APPS + [app for app in TENANT_APPS if app not in SHARED_APPS]
 
-# FOR THE TENANT SCHEMA
+# 4. Used by your migration task
 _CUSTOMER_INSTALLED_APPS = TENANT_APPS

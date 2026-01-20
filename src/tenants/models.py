@@ -19,15 +19,17 @@ class Tenants(models.Model):
     timestamp=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(auto_now=True)
 
-    def save(self,*args,**kwargs):
-        now=timezone.now()
-        if self.active and not self.active_at:
-            self.active_at=now
-            self.inactive_at=None
-        elif not self.active and not self.inactive_at:
-            self.inactive_at=now
-            self.active_at=None
+    def save(self, *args, **kwargs):
+        # We ONLY handle the data logic here, NO migrations
         if not self.schema_name:
-            self.schema_name=generate_schema_name(self.id)
-        super().save(*args,**kwargs)
-        migrate_single_tenant_task(self.id)
+            from .utils import generate_schema_name
+            self.schema_name = generate_schema_name(self.id)
+        super().save(*args, **kwargs)
+
+# The Signal: This triggers ONLY after the tenant is safely in the database
+@receiver(post_save, sender=Tenants)
+def trigger_tenant_migration(sender, instance, created, **kwargs):
+    if created:
+        from .tasks import migrate_single_tenant_task
+        # 'on_commit' waits for the save to be 100% finished
+        transaction.on_commit(lambda: migrate_single_tenant_task(instance.id))
