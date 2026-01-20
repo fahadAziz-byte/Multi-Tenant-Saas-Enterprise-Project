@@ -193,13 +193,13 @@ class TenantSignupView(View):
             password = request.POST.get('password')
 
             if User.objects.filter(username=username).exists():
-                return render(request, 'accounts/signup.html', {
+                return render(request, 'accounts/tenant/tenant_signup.html', {
                     'error': 'Username already exists',
                     'departments': None
                 })
     
             if User.objects.filter(email=email).exists():
-                return render(request, 'accounts/signup.html', {
+                return render(request, 'accounts/tenant/tenant_signup.html', {
                     'error': 'Email already exists',
                     'departments': None
                 })

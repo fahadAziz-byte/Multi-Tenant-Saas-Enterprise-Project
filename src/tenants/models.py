@@ -4,9 +4,10 @@ from django.utils import timezone
 from .utils import generate_schema_name
 from helpers.db.validators import validate_blocked_subdomains,validate_subdomain
 from django.core.management import call_command
+import threading
+from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.db import transaction
 import uuid
 from .tasks import migrate_single_tenant_task
 User=settings.AUTH_USER_MODEL
@@ -29,11 +30,18 @@ class Tenants(models.Model):
             self.schema_name = generate_schema_name(self.id)
         super().save(*args, **kwargs)
 
-# The Signal: This triggers ONLY after the tenant is safely in the database
 @receiver(post_save, sender=Tenants)
 def trigger_tenant_migration(sender, instance, created, **kwargs):
     if created:
         from .tasks import migrate_single_tenant_task
-        # Instead of calling it directly, we ensure it's outside the signup transaction
-        # if you have Celery, use it here. If not, use on_commit carefully.
-        transaction.on_commit(lambda: migrate_single_tenant_task(instance.id))
+        
+        # We define a function to run the task
+        def run_task():
+            # Important: Close the connection in the new thread to get a fresh one
+            from django.db import connection
+            connection.close()
+            migrate_single_tenant_task(instance.id)
+
+        # We start the task in a separate Thread so the signup finishes immediately
+        # transaction.on_commit ensures the thread starts only after the signup is saved
+        transaction.on_commit(lambda: threading.Thread(target=run_task).start())
