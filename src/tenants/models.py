@@ -34,5 +34,6 @@ class Tenants(models.Model):
 def trigger_tenant_migration(sender, instance, created, **kwargs):
     if created:
         from .tasks import migrate_single_tenant_task
-        # 'on_commit' waits for the save to be 100% finished
+        # Instead of calling it directly, we ensure it's outside the signup transaction
+        # if you have Celery, use it here. If not, use on_commit carefully.
         transaction.on_commit(lambda: migrate_single_tenant_task(instance.id))

@@ -1,23 +1,29 @@
-# cfehome/router.py
+from django.db import connection
 
 class TenantSyncRouter:
     def allow_migrate(self, db, app_label, model_name=None, **hints):
+        # Identify if we are currently in the public schema
+        # (This assumes your schema switcher sets connection.schema_name)
+        active_schema = getattr(connection, 'schema_name', 'public')
+        is_public = active_schema == 'public'
+
         if app_label == 'accounts':
-            # EVERYTHING listed here will stay in the Public (Main) DB
-            # NOTHING here will be created inside the Tenants
             global_models = [
-                'account',     # Your custom user class
-                'user',        # Standard fallback
-                'session', 
-                'emailaddress', # If using AllAuth
-                'socialaccount' # If using AllAuth
+                'account', 'user', 'session', 
+                'emailaddress', 'socialaccount', 'socialtoken', 'socialapp'
             ]
+            
             if model_name in global_models:
-                return True # Put in Public
-            
-            # EVERYTHING else in accounts (like 'department') 
-            # will return False here, so it WON'T go into Public.
-            # Instead, it will wait for your task to put it in the Tenant.
-            return False 
-            
+                # ONLY create User/Auth tables if we are in Public
+                return is_public
+            else:
+                # ONLY create Departments/Profiles if we are in a Tenant
+                return not is_public
+
+        # For all other apps (approvals, attendance), they only live in Tenants
+        # So skip them if we are in public
+        tenant_only_apps = ['approvals', 'attendance', 'commando']
+        if app_label in tenant_only_apps:
+            return not is_public
+
         return None
