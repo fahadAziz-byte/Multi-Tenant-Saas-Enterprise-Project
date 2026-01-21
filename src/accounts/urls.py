@@ -1,6 +1,6 @@
 # accounts/urls.py
 from django.urls import path,include
-from .views.views import TenantLoginView,TenantSignupView,user_logout
+from .views.views import TenantLoginView,TenantSignupView,user_logout,department_create_view
 from .views.emp_views_utils import request_attendance_correction
 from .views.hr_views_utils import hr_mark_attendance,hr_view_attendance,hr_review_requests,hr_employee_approval_list, hr_employee_approval_detail
 from .views.home_views import employee_home, hr_home
@@ -8,6 +8,9 @@ from tenants.tenant_views import tenant_home,tenant_selection
 urlpatterns = [
     path('user-login/', TenantLoginView.as_view(), name='loginn'),
     path('user-signup/', TenantSignupView.as_view(), name='signupp'),
+    path('logout/', user_logout, name='logout'),
+    #tenant URLS here in accounts app
+    path("departments/create/", department_create_view, name="department-create"),
     # Redirecting tenant homepage to tenant urls
     path('tenant_homepage/<str:schema_name>', tenant_home,name='tenant-home'),
     path('tenant_selection/',tenant_selection,name='tenant-selection'),
@@ -22,5 +25,4 @@ urlpatterns = [
     path('hr/review_requests/', hr_review_requests, name='hr_review_requests'),
     path('hr/employee-approvals/', hr_employee_approval_list, name='hr-employee-approvals'),
     path('hr/employee-approval/<uuid:application_id>/', hr_employee_approval_detail, name='hr-employee-approval-detail'),
-    path('logout/', user_logout, name='logout'),
 ]

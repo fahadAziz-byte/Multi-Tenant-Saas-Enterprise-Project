@@ -170,12 +170,21 @@ class TenantSignupView(View):
         else:
             from accounts.models import Department
             
-            # This automatically queries from the active tenant schema
+            # Query departments
             departments = Department.objects.all().order_by('name')
+            
+            # Check if any departments exist
+            is_sign_up_allowed = departments.exists()
+            
+            message = ""
+            if not is_sign_up_allowed:
+                message = "No department is available for employees or HRs to signup. No HRs or employees will be able to sign up until the tenant owner creates a department."
             
             context = {
                 'departments': departments,
-                'tenant_name':request.subdomain
+                'tenant_name': request.subdomain,
+                'isSignUpAllowed': is_sign_up_allowed,
+                'message': message
             }
             
             return render(request, 'accounts/signup.html', context)

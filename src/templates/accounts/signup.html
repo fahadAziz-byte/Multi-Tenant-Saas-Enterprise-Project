@@ -13,7 +13,7 @@
             <div class="text-center mb-8">
                 <div class="mx-auto h-16 w-16 bg-indigo-600 rounded-full flex items-center justify-center mb-4">
                     <svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 20 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 011-1h2a1 1 011 1v5m-4 0h4"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 20 00-2-2H7a2 20 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 011-1h2a1 1 011 1v5m-4 0h4"></path>
                     </svg>
                 </div>
                 <h2 class="text-3xl font-bold text-gray-900">Create Account</h2>
@@ -22,6 +22,24 @@
 
             <!-- Signup Form -->
             <div class="bg-white rounded-2xl shadow-xl p-8">
+                
+                <!-- START: Message for No Departments -->
+                {% if not isSignUpAllowed %}
+                    <div class="mb-6 p-4 bg-amber-50 border-l-4 border-amber-500 rounded">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-amber-700 font-medium">{{ message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <!-- END: Message -->
+
                 <form method="post">
                     {% csrf_token %}
                     
@@ -45,14 +63,7 @@
                         <label for="username" class="block text-sm font-semibold text-gray-700 mb-2">
                             Username <span class="text-red-500">*</span>
                         </label>
-                        <input 
-                            type="text" 
-                            id="username"
-                            name="username" 
-                            required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                            placeholder="Enter username"
-                        >
+                        <input type="text" id="username" name="username" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" placeholder="Enter username">
                     </div>
 
                     <!-- First Name -->
@@ -60,14 +71,7 @@
                         <label for="first_name" class="block text-sm font-semibold text-gray-700 mb-2">
                             First Name <span class="text-red-500">*</span>
                         </label>
-                        <input 
-                            type="text" 
-                            id="first_name"
-                            name="first_name" 
-                            required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                            placeholder="Enter first name"
-                        >
+                        <input type="text" id="first_name" name="first_name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" placeholder="Enter first name">
                     </div>
 
                     <!-- Last Name -->
@@ -75,14 +79,7 @@
                         <label for="last_name" class="block text-sm font-semibold text-gray-700 mb-2">
                             Last Name <span class="text-red-500">*</span>
                         </label>
-                        <input 
-                            type="text" 
-                            id="last_name"
-                            name="last_name" 
-                            required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                            placeholder="Enter last name"
-                        >
+                        <input type="text" id="last_name" name="last_name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" placeholder="Enter last name">
                     </div>
 
                     <!-- Email -->
@@ -90,14 +87,7 @@
                         <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
                             Email <span class="text-red-500">*</span>
                         </label>
-                        <input 
-                            type="email" 
-                            id="email"
-                            name="email" 
-                            required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                            placeholder="Enter email"
-                        >
+                        <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" placeholder="Enter email">
                     </div>
 
                     <!-- Password -->
@@ -105,14 +95,7 @@
                         <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
                             Password <span class="text-red-500">*</span>
                         </label>
-                        <input 
-                            type="password" 
-                            id="password"
-                            name="password" 
-                            required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                            placeholder="Enter password"
-                        >
+                        <input type="password" id="password" name="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" placeholder="Enter password">
                     </div>
 
                     <!-- Role Selection -->
@@ -120,13 +103,7 @@
                         <label for="role" class="block text-sm font-semibold text-gray-700 mb-2">
                             Role <span class="text-red-500">*</span>
                         </label>
-                        <select 
-                            id="role" 
-                            name="role" 
-                            required
-                            onchange="toggleDepartmentField()"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                        >
+                        <select id="role" name="role" required onchange="toggleDepartmentField()" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
                             <option value="">-- Select Role --</option>
                             <option value="employee">Employee</option>
                             <option value="hr">HR</option>
@@ -138,55 +115,33 @@
                         <label for="department" class="block text-sm font-semibold text-gray-700 mb-2">
                             Department <span class="text-red-500">*</span>
                         </label>
-                        <select 
-                            id="department" 
-                            name="department"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                        >
+                        <select id="department" name="department" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
                             <option value="">-- Select Department --</option>
                             {% for dept in departments %}
                                 <option value="{{ dept.id }}">{{ dept.name }}</option>
                             {% endfor %}
                         </select>
-                        <p class="text-xs text-gray-500 mt-1">Select your department</p>
                     </div>
 
-                    <!-- HR Admin Checkbox (for HR only) -->
+                    <!-- HR Admin Checkbox -->
                     <div id="hr-admin-field" class="mb-4 hidden">
                         <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
                             <label class="flex items-start">
-                                <input 
-                                    type="checkbox" 
-                                    id="is_admin"
-                                    name="is_admin"
-                                    value="true"
-                                    onchange="toggleHRDepartments()"
-                                    class="mt-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                                >
-                                <span class="ml-3">
-                                    <span class="text-sm font-semibold text-gray-900">Admin HR</span>
-                                    <span class="block text-xs text-gray-600 mt-1">Grant full access to all departments and employees</span>
-                                </span>
+                                <input type="checkbox" id="is_admin" name="is_admin" value="true" onchange="toggleHRDepartments()" class="mt-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                <span class="ml-3 text-sm font-semibold text-gray-900">Admin HR</span>
                             </label>
                         </div>
                     </div>
 
-                    <!-- Department Selection for HR (if not admin) -->
+                    <!-- Department Selection for HR -->
                     <div id="hr-departments-field" class="mb-6 hidden">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Manage Departments
-                        </label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Manage Departments</label>
                         <div class="border border-gray-300 rounded-lg p-4 max-h-48 overflow-y-auto bg-gray-50">
                             {% if departments %}
                                 <div class="space-y-2">
                                     {% for dept in departments %}
                                         <label class="flex items-center p-2 hover:bg-white rounded transition cursor-pointer">
-                                            <input 
-                                                type="checkbox" 
-                                                name="hr_departments"
-                                                value="{{ dept.id }}"
-                                                class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                                            >
+                                            <input type="checkbox" name="hr_departments" value="{{ dept.id }}" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                                             <span class="ml-3 text-sm text-gray-700">{{ dept.name }}</span>
                                         </label>
                                     {% endfor %}
@@ -195,18 +150,18 @@
                                 <p class="text-sm text-gray-500 text-center py-2">No departments available</p>
                             {% endif %}
                         </div>
-                        <p class="text-xs text-gray-500 mt-2">
-                            <svg class="inline w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-                            </svg>
-                            Leave empty for full access to all departments
-                        </p>
                     </div>
 
                     <!-- Submit Button -->
                     <button 
                         type="submit"
-                        class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition font-semibold text-base shadow-lg hover:shadow-xl"
+                        {% if not isSignUpAllowed %} disabled {% endif %}
+                        class="w-full py-3 px-4 rounded-lg transition font-semibold text-base shadow-lg 
+                        {% if isSignUpAllowed %}
+                            bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+                        {% else %}
+                            bg-gray-400 text-gray-100 cursor-not-allowed
+                        {% endif %}"
                     >
                         Create Account
                     </button>
@@ -215,19 +170,10 @@
                     <div class="mt-6 text-center">
                         <p class="text-sm text-gray-600">
                             Already have an account? 
-                            <a href="{% url 'loginn' %}" class="font-semibold text-indigo-600 hover:text-indigo-700 transition">
-                                Login here
-                            </a>
+                            <a href="{% url 'loginn' %}" class="font-semibold text-indigo-600 hover:text-indigo-700 transition">Login here</a>
                         </p>
                     </div>
                 </form>
-            </div>
-
-            <!-- Footer -->
-            <div class="mt-8 text-center">
-                <p class="text-xs text-gray-500">
-                    By signing up, you agree to our Terms of Service and Privacy Policy
-                </p>
             </div>
         </div>
     </div>
@@ -241,21 +187,16 @@
             const departmentSelect = document.getElementById('department');
             
             if (role === 'employee') {
-                // Show department dropdown for employees
                 departmentField.classList.remove('hidden');
                 hrAdminField.classList.add('hidden');
                 hrDepartmentsField.classList.add('hidden');
                 departmentSelect.required = true;
             } else if (role === 'hr') {
-                // Show HR admin checkbox
                 departmentField.classList.add('hidden');
                 hrAdminField.classList.remove('hidden');
                 departmentSelect.required = false;
-                
-                // Check if admin checkbox affects departments field
                 toggleHRDepartments();
             } else {
-                // Hide all
                 departmentField.classList.add('hidden');
                 hrAdminField.classList.add('hidden');
                 hrDepartmentsField.classList.add('hidden');
@@ -266,7 +207,6 @@
         function toggleHRDepartments() {
             const isAdmin = document.getElementById('is_admin').checked;
             const hrDepartmentsField = document.getElementById('hr-departments-field');
-            
             if (isAdmin) {
                 hrDepartmentsField.classList.add('hidden');
             } else {
