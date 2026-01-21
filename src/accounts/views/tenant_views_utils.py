@@ -103,8 +103,8 @@ def hr_approval_list(request):
 def department_create_view(request):
     from accounts.forms import DepartmentForm
     with use_public_schema(revert_schema_name=None, revert_schema=False):
-        tenant = Tenants.objects.filter(owner=request.user)
-    tenant_url=tenant.schema_name
+        tenants = Tenants.objects.filter(owner=request.user)
+    tenant_url=tenants[0].schema_name
     if request.method == "POST":
         form = DepartmentForm(request.POST)
         if form.is_valid():
