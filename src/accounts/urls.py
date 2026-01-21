@@ -1,10 +1,10 @@
 # accounts/urls.py
 from django.urls import path,include
-from .views.views import TenantLoginView,TenantSignupView,user_logout,department_create_view
+from .views.views import TenantLoginView,TenantSignupView,user_logout
 from .views.emp_views_utils import request_attendance_correction
 from .views.hr_views_utils import hr_mark_attendance,hr_view_attendance,hr_review_requests,hr_employee_approval_list, hr_employee_approval_detail
 from .views.home_views import employee_home, hr_home
-from tenants.tenant_views import tenant_home,tenant_selection
+from tenants.tenant_views import tenant_home,tenant_selection,department_create_view
 urlpatterns = [
     path('user-login/', TenantLoginView.as_view(), name='loginn'),
     path('user-signup/', TenantSignupView.as_view(), name='signupp'),
