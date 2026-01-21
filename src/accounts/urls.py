@@ -4,7 +4,8 @@ from .views.views import TenantLoginView,TenantSignupView,user_logout
 from .views.emp_views_utils import request_attendance_correction
 from .views.hr_views_utils import hr_mark_attendance,hr_view_attendance,hr_review_requests,hr_employee_approval_list, hr_employee_approval_detail
 from .views.home_views import employee_home, hr_home
-from tenants.tenant_views import tenant_home,tenant_selection,department_create_view
+from .views.tenant_views_utils import department_create_view
+from tenants.tenant_views import tenant_home,tenant_selection
 urlpatterns = [
     path('user-login/', TenantLoginView.as_view(), name='loginn'),
     path('user-signup/', TenantSignupView.as_view(), name='signupp'),
