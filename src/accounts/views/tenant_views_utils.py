@@ -5,7 +5,8 @@ from django.utils import timezone
 from accounts.models import Account, Department, HRProfile, EmployeeProfile
 from django.db.models import Count, Q
 from decouple import config
-
+from helpers.db.schemas import use_public_schema
+from tenants.models import Tenants
 
 @login_required
 def department_detail(request, department_id):
