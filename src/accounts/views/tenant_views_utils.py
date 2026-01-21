@@ -100,6 +100,7 @@ def hr_approval_list(request):
 
 @login_required
 def department_create_view(request):
+    from .forms import DepartmentForm
     if request.method == "POST":
         form = DepartmentForm(request.POST)
         if form.is_valid():

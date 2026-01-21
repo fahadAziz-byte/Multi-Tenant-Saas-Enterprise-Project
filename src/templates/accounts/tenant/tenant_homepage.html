@@ -175,49 +175,76 @@
             </div>
         </div>
 
-        <!-- Departments Grid -->
-        <div id="departments-section" class="bg-white rounded-xl shadow-sm">
-            <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800">Organization Departments</h2>
-                        <p class="text-sm text-gray-600 mt-1">Manage and view all departments</p>
-                    </div>
-                    <span class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold">
-                        {{ total_departments }} Total
-                    </span>
-                </div>
+        <div id="departments-section" class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+    <!-- Header Section -->
+    <div class="px-6 py-6 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Organization Departments</h2>
+                <p class="text-sm text-gray-600 mt-1">Manage and view all functional units</p>
             </div>
             
-           <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h5 class="card-title d-flex justify-content-between align-items-center">
-                        Your Departments
-                        <!-- This is the button you wanted to update -->
-                        <a href="{% url 'department-create' %}" class="btn btn-primary btn-sm">
-                            + Add Department
-                        </a>
-                    </h5>
-                    
-                    <div class="mt-3">
-                        {% if departments %}
-                            <ul class="list-group list-group-flush">
-                                {% for dept in departments %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        {{ dept.name }}
-                                        <span class="badge bg-secondary rounded-pill">
-                                            {{ dept.employees.count }} Employees
-                                        </span>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <p class="text-muted small">No departments found. Create your first one to get started.</p>
-                        {% endif %}
+            <!-- NEW: Consistent Add Department Button -->
+            <a href="{% url 'department-create' %}" 
+               class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl shadow-lg hover:shadow-indigo-200 transition-all transform hover:-translate-y-0.5 active:scale-95">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Add Department
+            </a>
+        </div>
+    </div>
+
+    <!-- Departments Content Area -->
+    <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-700">Your Departments</h3>
+                <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                    {{ total_departments }} Total
+                </span>
+            </div>
+            
+            <div class="mt-2">
+                {% if departments %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {% for dept in departments %}
+                        <div class="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-xl hover:border-indigo-300 hover:bg-white transition-all group">
+                            <div class="flex items-center gap-3">
+                                <!-- Department Icon/Initial -->
+                                <div class="h-10 w-10 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center font-bold text-lg">
+                                    {{ dept.name|slice:":1"|upper }}
+                                </div>
+                                <div>
+                                    <p class="font-bold text-gray-800 group-hover:text-indigo-600 transition">{{ dept.name }}</p>
+                                    <p class="text-xs text-gray-500">Department ID: #{{ dept.id }}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Employee Count Badge -->
+                            <span class="inline-flex items-center px-3 py-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium rounded-full shadow-sm">
+                                <svg class="w-3 h-3 mr-1 text-indigo-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                                </svg>
+                                {{ dept.employees.count }} Employees
+                            </span>
+                        </div>
+                        {% endfor %}
                     </div>
-                </div>
+                {% else %}
+                    <!-- Empty State -->
+                    <div class="text-center py-10 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
+                        <div class="mx-auto h-12 w-12 text-gray-400 mb-3">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 20 0 00-2-2H7a2 20 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 011-1h2a1 1 011 1v5m-4 0h4"></path>
+                            </svg>
+                        </div>
+                        <p class="text-gray-500 font-medium">No departments found.</p>
+                        <p class="text-gray-400 text-xs">Create your first department to get started.</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
+    </div>
 
         <!-- System Info Footer -->
         <div class="mt-8 bg-gray-100 rounded-lg p-4">
