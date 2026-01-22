@@ -394,7 +394,7 @@ def department_create_view(request):
             if form.is_valid():
                 # Django saves this to the CURRENT active tenant schema automatically
                 form.save()
-                messages.success(request, f"Department '{form.cleaned_data['name']}' created successfully!")
+                print("[INFO] Department created successfully.")
         return redirect(f"https://{request.subdomain}.scalesphere.space/users/tenant_homepage/{tenant.schema_name}")
     else:
         form = DepartmentForm()
