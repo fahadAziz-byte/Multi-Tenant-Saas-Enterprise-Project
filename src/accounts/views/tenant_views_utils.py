@@ -99,24 +99,6 @@ def hr_approval_list(request):
         traceback.print_exc()
         return HttpResponse(f"Error loading page: {str(e)}")
 
-@login_required
-def department_create_view(request):
-    from accounts.forms import DepartmentForm
-    from django.contrib import messages
-    with use_public_schema(revert_schema_name=None, revert_schema=False):
-        tenants = Tenants.objects.filter(owner=request.user)
-    tenant_url=tenants[0].schema_name
-    if request.method == "POST":
-        form = DepartmentForm(request.POST)
-        if form.is_valid():
-            # Django saves this to the CURRENT active tenant schema automatically
-            form.save()
-            messages.success(request, f"Department '{form.cleaned_data['name']}' created successfully!")
-            return redirect(f"https://{request.subdomain}.scalesphere.space/users/tenant_homepage/{tenant_url}/")
-    else:
-        form = DepartmentForm()
-    
-    return render(request, "accounts/department_form.html", {"form": form,"tenant_url":tenant_url})
 
 
 @login_required

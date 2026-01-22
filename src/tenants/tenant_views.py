@@ -9,7 +9,7 @@ from django.db.models import Count, Q
 from accounts.models import Account, Department, HRProfile, EmployeeProfile
 from approvals.models import HRApproval
 from datetime import datetime, timedelta
-from helpers.db.schemas import use_public_schema,get_schema_name,activate_tenant_schema
+from helpers.db.schemas import use_public_schema,get_schema_name,activate_tenant_schema,use_tenant_schema
 from tenants.models import Tenants
 from django.conf import settings
 from decouple import config
@@ -381,3 +381,22 @@ def department_detail(request,schema_name, department_id):
         import traceback
         traceback.print_exc()
         return HttpResponse(f"Error: {str(e)}")
+
+@login_required
+def department_create_view(request):
+    from accounts.forms import DepartmentForm
+    with use_public_schema(revert_schema_name=None, revert_schema=False):
+        tenants = Tenants.objects.filter(owner=request.user)
+    tenant_url=tenants[0].schema_name
+    if request.method == "POST":
+        with use_tenant_schema(schema_name=tenant_url,create_if_missing=False,revert_public=True):
+            form = DepartmentForm(request.POST)
+            if form.is_valid():
+                # Django saves this to the CURRENT active tenant schema automatically
+                form.save()
+                messages.success(request, f"Department '{form.cleaned_data['name']}' created successfully!")
+        return redirect(f"https://{request.subdomain}.scalesphere.space/users/tenant_homepage/{tenant.schema_name}")
+    else:
+        form = DepartmentForm()
+    
+    return render(request, "accounts/department_form.html", {"form": form,"tenant_url":tenant_url})
