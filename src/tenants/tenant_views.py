@@ -10,9 +10,9 @@ from accounts.models import Account, Department, HRProfile, EmployeeProfile
 from approvals.models import HRApproval
 from datetime import datetime, timedelta
 from helpers.db.schemas import use_public_schema,get_schema_name,activate_tenant_schema,use_tenant_schema
-from tenants.models import Tenants
 from django.conf import settings
 from decouple import config
+from .models import Tenants
 PRODUCTION_BASE_URL=settings.PRODUCTION_BASE_URL
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 
@@ -175,12 +175,11 @@ def hr_approval_detail(request,schema_name, application_id):
     #     print(f"got subdomain : {tenant_obj.subdomain} and schema name : {tenant_obj.schema_name}")
         
     # schema_name,valid_tenant,subdomain=get_schema_name(subdomain=tenant_obj.subdomain)
-
-    activate_tenant_schema(schema_name)
+    with use_public_schema(revert_schema_name=schema_name, revert_schema=True):
+        tenant_obj=Tenants.objects.get(schema_name=schema_name)
     
     try:
         hr_application = HRApproval.objects.get(id=application_id, status='PENDING')
-        tenant_obj=Tenants.objects.get(schema_name=schema_name)
         if request.method == 'POST':
             action = request.POST.get('action')
             
