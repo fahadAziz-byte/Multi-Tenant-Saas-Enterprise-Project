@@ -263,7 +263,7 @@ Welcome to the team! You can now manage employee applications and attendance.
                 
                 # Update application status
                 hr_application.status = 'REJECTED'
-                hr_application.reviewed_by = tenant_obj.owner
+                hr_application.reviewed_by = 'tenant_owner'
                 hr_application.reviewed_at = timezone.now()
                 hr_application.rejection_reason = rejection_reason
                 hr_application.save()
