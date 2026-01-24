@@ -75,28 +75,12 @@ class TenantLoginView(View):
         if subdomain in ["localhost", settings.MAIN_SUBDOMAIN, None] or not request.subdomain:
             print(f"[LOGIN] Main domain login attempt for: {username}")
             
-            from helpers.db.schemas import use_public_schema
             
-            with use_public_schema(revert_schema_name=None, revert_schema=False):
-                User = get_user_model()
+            User = get_user_model()
             
-            # 1. Check if user exists in this schema at all
-            try:
-                print(f"DEBUG: getting user from user model")
-                debug_user = User.objects.get(username=username)
-                print(f"DEBUG: User found in public schema. ID: {debug_user.pk}, Active: {debug_user.is_active}")
-                
-                # 2. Check password manually for debugging
-                pass_check = debug_user.check_password(password)
-                print(f"DEBUG: Password check result: {pass_check}")
-                
-            except User.DoesNotExist:
-                print("DEBUG: User NOT found in public schema.")
-
-            # 3. Proceed with standard auth
-            print('authenticating user : ', username)
+            
             user = authenticate(request, username=username, password=password)
-            print('after authenticating user : ', user)
+            print('after authenticating user : ', user.username)
             if user is not None and user.is_superuser:
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 print(f"[LOGIN] Tenant owner logged in: {username}")
