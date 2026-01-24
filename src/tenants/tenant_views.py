@@ -180,7 +180,7 @@ def hr_approval_detail(request,schema_name, application_id):
     
     try:
         hr_application = HRApproval.objects.get(id=application_id, status='PENDING')
-        
+        tenant_obj=Tenants.objects.get(schema_name=schema_name)
         if request.method == 'POST':
             action = request.POST.get('action')
             
