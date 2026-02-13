@@ -108,7 +108,6 @@ def hr_approval_detail(request, account_id):
         return HttpResponse("Sorry! You can only access by your enterprise subdomain")
     
     try:
-        owner_account = Account.objects.get(user=request.user)
         
         if not request.user.is_superuser:
             return HttpResponse("Access denied! Only tenant owners can access this page.")
@@ -123,7 +122,7 @@ def hr_approval_detail(request, account_id):
             
             if action == 'approve':
                 hr_account.is_approved = True
-                hr_account.approved_by = request.user
+                hr_account.approved_by = request.user.username
                 hr_account.approved_at = timezone.now()
                 hr_account.save()
                 

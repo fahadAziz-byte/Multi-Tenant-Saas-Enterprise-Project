@@ -80,7 +80,7 @@ class TenantLoginView(View):
             
             
             user = authenticate(request, username=username, password=password)
-            print('after authenticating user : ', user.username)
+            print('after authenticating user : ', username)
             if user is not None and user.is_superuser:
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 print(f"[LOGIN] Tenant owner logged in: {username}")
