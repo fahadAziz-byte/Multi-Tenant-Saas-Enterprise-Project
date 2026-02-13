@@ -9,6 +9,7 @@ from django.utils import timezone
 from approvals.models import EmployeeApproval
 from django.contrib.auth.hashers import check_password
 from datetime import date
+from django.contrib.auth.models import User
 # View all employees attendance
 @login_required
 def hr_view_attendance(request):

@@ -219,7 +219,7 @@ def hr_approval_detail(request,schema_name, application_id):
                 
                 # Update application status
                 hr_application.status = 'APPROVED'
-                hr_application.reviewed_by = tenant_obj.owner
+                hr_application.reviewed_by = tenant_obj.owner.username
                 hr_application.reviewed_at = timezone.now()
                 hr_application.save()
                 
