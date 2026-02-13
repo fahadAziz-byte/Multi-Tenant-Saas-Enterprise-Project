@@ -287,7 +287,7 @@ def hr_employee_approval_detail(request, application_id):
         
         if request.method == 'POST':
             action = request.POST.get('action')
-            
+            from accounts.models import EmployeeProfile
             if action == 'approve':
                 # CREATE THE ACTUAL USER AND EMPLOYEE ACCOUNT
                 user = User.objects.create(
@@ -324,36 +324,36 @@ def hr_employee_approval_detail(request, application_id):
                 print(f"[APPROVAL] Employee approved: {user.username}")
                 
                 # Send approval email
-                try:
-                    send_mail(
-                        subject=f'Employee Application Approved - {request.subdomain}',
-                        message=f'''
-                            Congratulations {employee_application.first_name}!
+                # try:
+                #     send_mail(
+                #         subject=f'Employee Application Approved - {request.subdomain}',
+                #         message=f'''
+                #             Congratulations {employee_application.first_name}!
 
-                            Your employee application has been APPROVED.
+                #             Your employee application has been APPROVED.
 
-                            ✅ Account Details:
-                            - Username: {user.username}
-                            - Email: {user.email}
-                            - Department: {employee_application.department.name}
-                            - Leave Balance: {employee_application.total_leaves} days
-                            - Organization: {request.subdomain}
+                #             ✅ Account Details:
+                #             - Username: {user.username}
+                #             - Email: {user.email}
+                #             - Department: {employee_application.department.name}
+                #             - Leave Balance: {employee_application.total_leaves} days
+                #             - Organization: {request.subdomain}
 
-                            🔗 Login here:
-                            http://{request.subdomain}.localhost:8000/users/user-login/
+                #             🔗 Login here:
+                #             http://{request.subdomain}.localhost:8000/users/user-login/
 
-                            Welcome to {request.subdomain}!
+                #             Welcome to {request.subdomain}!
 
-                            ---
-                            {request.subdomain} HR Team
-                        ''',
-                        from_email=settings.EMAIL_HOST_USER,
-                        recipient_list=[user.email],
-                        fail_silently=False,
-                    )
-                    print(f"[EMAIL] Approval email sent to {user.email}")
-                except Exception as e:
-                    print(f"[ERROR] Failed to send approval email: {e}")
+                #             ---
+                #             {request.subdomain} HR Team
+                #         ''',
+                #         from_email=settings.EMAIL_HOST_USER,
+                #         recipient_list=[user.email],
+                #         fail_silently=False,
+                #     )
+                #     print(f"[EMAIL] Approval email sent to {user.email}")
+                # except Exception as e:
+                #    print(f"[ERROR] Failed to send approval email: {e}")
                 
                 return redirect('hr-employee-approvals')
             
@@ -370,30 +370,30 @@ def hr_employee_approval_detail(request, application_id):
                 print(f"[REJECTION] Employee application rejected: {employee_application.username}")
                 
                 # Send rejection email
-                try:
-                    send_mail(
-                        subject=f'Employee Application Update - {request.subdomain}',
-                        message=f'''
-                            Dear {employee_application.first_name or employee_application.username},
+                # try:
+                #     send_mail(
+                #         subject=f'Employee Application Update - {request.subdomain}',
+                #         message=f'''
+                #             Dear {employee_application.first_name or employee_application.username},
 
-                            Thank you for your interest in joining {request.subdomain}.
+                #             Thank you for your interest in joining {request.subdomain}.
 
-                            After review, we are unable to approve your application at this time.
+                #             After review, we are unable to approve your application at this time.
 
-                            Reason: {rejection_reason}
+                #             Reason: {rejection_reason}
 
-                            If you have any questions, please contact HR at {request.user.email}.
+                #             If you have any questions, please contact HR at {request.user.email}.
 
-                            ---
-                            {request.subdomain} HR Team
-                        ''',
-                        from_email=settings.EMAIL_HOST_USER,
-                        recipient_list=[employee_application.email],
-                        fail_silently=False,
-                    )
-                    print(f"[EMAIL] Rejection email sent to {employee_application.email}")
-                except Exception as e:
-                    print(f"[ERROR] Failed to send rejection email: {e}")
+                #             ---
+                #             {request.subdomain} HR Team
+                #         ''',
+                #         from_email=settings.EMAIL_HOST_USER,
+                #         recipient_list=[employee_application.email],
+                #         fail_silently=False,
+                #     )
+                #     print(f"[EMAIL] Rejection email sent to {employee_application.email}")
+                # except Exception as e:
+                #     print(f"[ERROR] Failed to send rejection email: {e}")
                 
                 # Delete the rejected application
                 employee_application.delete()

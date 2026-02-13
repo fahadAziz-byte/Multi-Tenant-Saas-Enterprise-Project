@@ -256,17 +256,21 @@ class TenantSignupView(View):
         # ==========================================
         if role.lower() == "employee":
             from approvals.models import EmployeeApproval
-            
-            # Check if application already exists
-            if EmployeeApproval.objects.filter(username=username).exists():
+            from accounts.models import EmployeeProfile
+
+            # Check if username already exists
+            if (EmployeeApproval.objects.filter(username=username).exists() or 
+                EmployeeProfile.objects.filter(account__user__username=username).exists()):
                 return render(request, 'accounts/signup.html', {
-                    'error': 'An employee application with this username already exists',
+                    'error': 'An employee application or account with this username already exists',
                     'departments': departments
                 })
-            
-            if EmployeeApproval.objects.filter(email=email).exists():
+
+            # Check if email already exists
+            if (EmployeeApproval.objects.filter(email=email).exists() or 
+                EmployeeProfile.objects.filter(account__user__email=email).exists()):
                 return render(request, 'accounts/signup.html', {
-                    'error': 'An employee application with this email already exists',
+                    'error': 'An employee application or account with this email already exists',
                     'departments': departments
                 })
             
@@ -341,7 +345,7 @@ class TenantSignupView(View):
         # ==========================================
         elif role.lower() == "hr":
             from approvals.models import HRApproval
-            
+            from accounts.models import HRProfile
             # Check if application already exists
             if HRApproval.objects.filter(username=username).exists():
                 return render(request, 'accounts/signup.html', {
@@ -352,6 +356,18 @@ class TenantSignupView(View):
             if HRApproval.objects.filter(email=email).exists():
                 return render(request, 'accounts/signup.html', {
                     'error': 'An HR application with this email already exists',
+                    'departments': departments
+                })
+            
+            if HRProfile.objects.filter(account__user__username=username).exists():
+                return render(request, 'accounts/signup.html', {
+                    'error': 'An HR account with this username already exists',
+                    'departments': departments
+                })
+            
+            if HRProfile.objects.filter(account__user__email=email).exists():
+                return render(request, 'accounts/signup.html', {
+                    'error': 'An HR account with this email already exists',
                     'departments': departments
                 })
             
