@@ -60,6 +60,8 @@ RUN rav download staticfiles_prod -f /tmp/rav.yaml
 # such as:
 # RUN python manage.py vendor_pull
 RUN python manage.py collectstatic --noinput
+RUN python manage.py makemigrations --noinput
+RUN python manage.py migrate --noinput
 # whitenoise -> s3
 
 # set the Django default project name
