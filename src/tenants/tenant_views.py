@@ -219,7 +219,6 @@ def hr_approval_detail(request,schema_name, application_id):
                 
                 # Update application status
                 hr_application.status = 'APPROVED'
-                hr_application.reviewed_by = tenant_obj.schema_name
                 hr_application.reviewed_at = timezone.now()
                 hr_application.save()
                 
@@ -263,7 +262,6 @@ Welcome to the team! You can now manage employee applications and attendance.
                 
                 # Update application status
                 hr_application.status = 'REJECTED'
-                hr_application.reviewed_by = 'tenant_owner'
                 hr_application.reviewed_at = timezone.now()
                 hr_application.rejection_reason = rejection_reason
                 hr_application.save()

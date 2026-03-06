@@ -52,14 +52,7 @@ class HRApproval(models.Model):
     applied_at = models.DateTimeField(auto_now_add=True)
     reviewed_at = models.DateTimeField(null=True, blank=True)
     
-    # Reviewer info
-    reviewed_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='reviewed_hr_approvals'
-    )
+    
     rejection_reason = models.TextField(blank=True, null=True)
     
     class Meta:
