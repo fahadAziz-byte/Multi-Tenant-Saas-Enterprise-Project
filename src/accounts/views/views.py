@@ -8,7 +8,6 @@ from accounts.models import Account,Department
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.http import HttpResponse
-from django.core.mail import send_mail
 from django.conf import settings
 from django.db import models
 from datetime import date
@@ -294,42 +293,7 @@ class TenantSignupView(View):
                 department=department
             )
             
-            print(f"[EMPLOYEE APPLICATION] Created for {username} in {department.name}")
             
-            # Send notification to HRs who manage this department
-            from accounts.models import HRProfile
-            
-            # Get HRs who manage this department or admin HRs
-            hrs_to_notify = HRProfile.objects.filter(
-                models.Q(departments=department) | models.Q(is_admin=True)
-            ).select_related('account__user').distinct()
-            
-            hr_emails = [hr.account.user.email for hr in hrs_to_notify if hr.account.user.email]
-            
-            if hr_emails:
-                try:
-                    send_mail(
-                        subject=f'New Employee Application - {department.name}',
-                        message=f'''
-                            A new employee application has been submitted.
-
-                            Applicant Details:
-                            - Username: {username}
-                            - Email: {email}
-                            - Department: {department.name}
-
-                            Please review and approve/reject this application in your HR dashboard.
-
-                            Login to review: https://{request.subdomain}.scalesphere.space/users/hr/employee-approvals/
-                        ''',
-                        from_email=settings.EMAIL_HOST_USER,
-                        recipient_list=hr_emails,
-                        fail_silently=True,
-                    )
-                    print(f"[EMAIL] Notification sent to {len(hr_emails)} HRs")
-                    print("HR mails are ",hr_emails)
-                except Exception as e:
-                    print(f"[ERROR] Failed to send email: {e}")
             
             # Show success page
             return render(request, 'accounts/signup_success.html', {
@@ -392,32 +356,6 @@ class TenantSignupView(View):
                     hr_approval.requested_departments.set(departments_list)
             
             print(f"[HR APPLICATION] Created for {username}")
-            
-            # Send notification to tenant owner
-            owner = User.objects.filter(is_superuser=True).first()
-            if owner and owner.email:
-                try:
-                    send_mail(
-                        subject=f'New HR Application - {username}',
-                        message=f'''
-                            A new HR application has been submitted.
-
-                            Applicant Details:
-                            - Username: {username}
-                            - Email: {email}
-                            - Type: {"Admin HR" if is_admin else "Department HR"}
-
-                            Please review and approve/reject this application in your tenant dashboard.
-
-                            Login to review: https://{request.subdomain}.scalesphere.space/users/tenant/hr-approvals/
-                        ''',
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        recipient_list=[owner.email],
-                        fail_silently=True,
-                    )
-                    print(f"[EMAIL] Notification sent to owner: {owner.email}")
-                except Exception as e:
-                    print(f"[ERROR] Failed to send email: {e}")
             
             # Show success page
             return render(request, 'accounts/signup_success.html', {

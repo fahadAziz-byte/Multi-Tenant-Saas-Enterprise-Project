@@ -126,7 +126,7 @@ def hr_approval_detail(request, account_id):
                 hr_account.approved_at = timezone.now()
                 hr_account.save()
                 
-                # Optionally, send email notification to HR
+                
                 print(f"[APPROVAL] HR {hr_account.user.username} approved by {request.user.username}")
                 
                 return redirect('hr-approval-list')
