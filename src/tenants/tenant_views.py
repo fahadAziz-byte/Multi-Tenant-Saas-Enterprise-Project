@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils import timezone
-from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models import Count, Q
@@ -224,36 +223,7 @@ def hr_approval_detail(request,schema_name, application_id):
                 
                 print(f"[APPROVAL] HR account approved: {user.username}")
                 
-                # Send approval email
-                try:
-                    send_mail(
-                        subject=f'HR Application Approved - {request.subdomain}',
-                        message=f'''
-Congratulations {hr_application.first_name}!
-
-Your HR application has been APPROVED by {request.subdomain}.
-
-✅ Account Details:
-- Username: {user.username}
-- Email: {user.email}
-- Role: {"Admin HR (Full Access)" if hr_application.is_admin else f"Department HR ({dept_names})"}
-- Organization: {request.subdomain}
-
-🔗 Login here:
-http://{request.subdomain}.localhost:8000/users/user-login/
-
-Welcome to the team! You can now manage employee applications and attendance.
-
----
-{request.subdomain} Administration Team
-                        ''',
-                        from_email=settings.EMAIL_HOST_USER,
-                        recipient_list=[user.email],
-                        fail_silently=False,
-                    )
-                    print(f"[EMAIL] Approval email sent to owner")
-                except Exception as e:
-                    print(f"[ERROR] Failed to send approval email: {e}")
+                
                 
                 return redirect('hr-approval-list')
             
@@ -267,32 +237,6 @@ Welcome to the team! You can now manage employee applications and attendance.
                 hr_application.save()
                 
                 print(f"[REJECTION] HR application rejected: {hr_application.username}")
-                
-                # Send rejection email
-                try:
-                    send_mail(
-                        subject=f'HR Application Update - {request.subdomain}',
-                        message=f'''
-Dear {hr_application.first_name or hr_application.username},
-
-Thank you for your interest in joining {request.subdomain} as an HR.
-
-After careful review, we are unable to approve your application at this time.
-
-Reason: {rejection_reason}
-
-If you have any questions, please contact the organization administrator.
-
----
-{request.subdomain} Administration Team
-                        ''',
-                        from_email=settings.EMAIL_HOST_USER,
-                        recipient_list=[hr_application.email],
-                        fail_silently=False,
-                    )
-                    print(f"[EMAIL] Rejection email sent to {hr_application.email}")
-                except Exception as e:
-                    print(f"[ERROR] Failed to send rejection email: {e}")
                 
                 # Delete the rejected application after email is sent
                 hr_application.delete()
