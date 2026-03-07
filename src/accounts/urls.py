@@ -21,6 +21,6 @@ urlpatterns = [
     path('hr/view_attendance/', hr_view_attendance, name='hr_view_attendance'),
     path('hr/mark_attendance/', hr_mark_attendance, name='hr_mark_attendance'),
     path('hr/review_requests/', hr_review_requests, name='hr_review_requests'),
-    path('hr/employee-approvals/', hr_employee_approval_list, name='hr-employee-approvals'),
-    path('hr/employee-approval/<uuid:application_id>/', hr_employee_approval_detail, name='hr-employee-approval-detail'),
+    path('hr/employee-approvals/', hr_employee_approval_list, name='hr_employee_approvals'),
+    path('hr/employee-approval/<uuid:application_id>/', hr_employee_approval_detail, name='hr_employee_approval_detail'),
 ]
