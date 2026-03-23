@@ -113,6 +113,8 @@ if DATABASE_URL:
         )
     }
 
+DATABASE_ROUTERS = ['helpers.db.routers.TenantSyncRouter']
+
 # --------------------------------------------------
 # REDIS (OPTIONAL)
 # --------------------------------------------------
