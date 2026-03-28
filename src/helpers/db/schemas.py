@@ -21,9 +21,6 @@ def activate_tenant_schema(schema_name):
     if not hasattr(connection, "schema_name"):
         connection.schema_name = DEFAULT_SCHEMA
 
-    if connection.schema_name==schema_name:
-        print(schema_name,' is already')
-        return
     if schema_name != DEFAULT_SCHEMA:
         if not does_schema_exists(schema_name):
             schema_name=DEFAULT_SCHEMA
