@@ -1,1 +1,1 @@
-web: gunicorn cfehome.wsgi
+web: python src/manage.py migrate && gunicorn cfehome.wsgi

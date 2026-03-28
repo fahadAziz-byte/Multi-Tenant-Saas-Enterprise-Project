@@ -2,25 +2,53 @@ from django.core.management import call_command
 from helpers.db.schemas import use_tenant_schema
 from django.db import connection
 
+
 def migrate_single_tenant_task(tenant_id: str):
+    """
+    Run ONLY tenant-app migrations inside a new tenant's schema.
+
+    IMPORTANT: We only migrate TENANT_APPS here. Shared apps (auth, sessions, etc.)
+    already live in the public schema and must NOT be duplicated into tenant schemas.
+    Doing so is what caused the cross-tenant table fallback bug.
+    """
     from django.apps import apps
+    from cfehome.installed import TENANT_APPS
+
     Tenants = apps.get_model('tenants', 'Tenants')
     instance = Tenants.objects.get(id=tenant_id)
     schema_name = instance.schema_name
 
+    print(f"[TENANT MIGRATION] Starting migration for schema: {schema_name}")
+    print(f"[TENANT MIGRATION] Will migrate these apps: {TENANT_APPS}")
+
     try:
         with use_tenant_schema(schema_name=schema_name, create_if_missing=True):
-            print(f"--- Running FULL Migration for schema: {schema_name} ---")
-            
-            # RUN ALL MIGRATIONS IN ONE SHOT
-            # This is 10x faster and uses less RAM than looping through apps
-            call_command("migrate", interactive=False, verbosity=1)
-            
-            print(f"--- Successfully finished {schema_name} ---")
+            print(f"--- Running TENANT-ONLY Migration for schema: {schema_name} ---")
+
+            # Verify search_path before migrating
+            with connection.cursor() as cur:
+                cur.execute("SHOW search_path;")
+                path = cur.fetchone()
+                print(f"[TENANT MIGRATION] DB search_path confirmed: {path}")
+
+            # Migrate each tenant app individually so shared apps are NOT touched
+            for app_label in TENANT_APPS:
+                try:
+                    print(f"[TENANT MIGRATION] Migrating app: {app_label}")
+                    call_command(
+                        "migrate",
+                        app_label,
+                        interactive=False,
+                        verbosity=1,
+                    )
+                except Exception as app_err:
+                    print(f"[TENANT MIGRATION] Warning: could not migrate '{app_label}': {app_err}")
+
+            print(f"--- Successfully finished migrating {schema_name} ---")
     except Exception as e:
         import traceback
         traceback.print_exc()
-        print(f"Error during migration: {e}")
+        print(f"[TENANT MIGRATION] Error during migration for {schema_name}: {e}")
     finally:
-        # Crucial: Clean up connection to avoid "another command in progress" errors
-        connection.close() 
+        # Crucial: ensure we close the connection OUTSIDE the context manager
+        connection.close()
