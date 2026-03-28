@@ -1,5 +1,6 @@
 from django.core.management import call_command
 from helpers.db.schemas import use_tenant_schema
+from helpers.db.statements import ACTIVATE_SCHEMA_SQL
 from django.db import connection
 
 
@@ -32,9 +33,18 @@ def migrate_single_tenant_task(tenant_id: str):
                 print(f"[TENANT MIGRATION] DB search_path confirmed: {path}")
 
             # Migrate each tenant app individually so shared apps are NOT touched
+            # CRITICAL: Re-activate the tenant schema BEFORE each app's migration.
+            # Django's post_migrate signals (content types, permissions) fire after each
+            # app migration and may reset the search_path back to 'public'.
+            # Without this re-activation, the router sees 'public' schema for the next
+            # app and blocks it, leaving the tenant without its tables.
             for app_label in TENANT_APPS:
                 try:
-                    print(f"[TENANT MIGRATION] Migrating app: {app_label}")
+                    # Force search_path back to tenant schema before each migration
+                    with connection.cursor() as cur:
+                        cur.execute(ACTIVATE_SCHEMA_SQL.format(schema_name=schema_name))
+                    connection.schema_name = schema_name
+                    print(f"[TENANT MIGRATION] Migrating app: {app_label} (confirmed schema: {schema_name})")
                     call_command(
                         "migrate",
                         app_label,
