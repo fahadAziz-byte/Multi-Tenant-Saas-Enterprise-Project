@@ -61,8 +61,8 @@ RUN rav download staticfiles_prod -f /tmp/rav.yaml
 # RUN python manage.py vendor_pull
 RUN python manage.py collectstatic --noinput
 RUN python manage.py makemigrations --noinput
-RUN python manage.py migrate --noinput
-# whitenoise -> s3
+# NOTE: migrate runs at RUNTIME via paracord_runner.sh, not here,
+# because the production database (Neon) is not available during Docker build.
 
 # set the Django default project name
 ARG PROJ_NAME="cfehome"
