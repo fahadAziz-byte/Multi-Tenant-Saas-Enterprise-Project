@@ -339,6 +339,16 @@ class TenantSignupView(View):
             is_admin = request.POST.get('is_admin') == 'true'
             
             # Create HR Approval Request
+            # ===== DEBUG: log active schema at HR signup time =====
+            from django.db import connection as dbconn
+            _schema_at_signup = getattr(dbconn, 'schema_name', 'UNKNOWN')
+            with dbconn.cursor() as _cur:
+                _cur.execute("SHOW search_path;")
+                _db_path = _cur.fetchone()
+            print(f"[DEBUG HR SIGNUP] request.subdomain = '{request.subdomain}'")
+            print(f"[DEBUG HR SIGNUP] connection.schema_name = '{_schema_at_signup}'")
+            print(f"[DEBUG HR SIGNUP] Postgres SHOW search_path = {_db_path}")
+            # ===== END DEBUG =====
             hr_approval = HRApproval.objects.create(
                 username=username,
                 email=email,
@@ -347,6 +357,7 @@ class TenantSignupView(View):
                 last_name=last_name,
                 is_admin=is_admin
             )
+            print(f"[DEBUG HR SIGNUP] HRApproval created with id={hr_approval.id} on schema '{_schema_at_signup}'")
             
             # Assign requested departments (if not admin)
             if not is_admin:

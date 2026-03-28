@@ -55,6 +55,17 @@ def tenant_home(request,schema_name):
             tenant_obj=Tenants.objects.get(schema_name=schema_name)
             print(f"got subdomain : {tenant_obj.subdomain} and schema name : {tenant_obj.schema_name}")
 
+        # ===== DEBUG: Verify active schema before queries =====
+        from django.db import connection
+        actual_schema = getattr(connection, 'schema_name', 'UNKNOWN')
+        print(f"[DEBUG tenant_home] URL schema_name param = '{schema_name}'")
+        print(f"[DEBUG tenant_home] connection.schema_name = '{actual_schema}'")
+        # Also ask the DB directly what search_path it is using
+        with connection.cursor() as cur:
+            cur.execute("SHOW search_path;")
+            db_search_path = cur.fetchone()
+            print(f"[DEBUG tenant_home] Postgres SHOW search_path = {db_search_path}")
+        # ===== END DEBUG =====
 
         # Get all departments with counts
         departments = Department.objects.annotate(
@@ -64,11 +75,13 @@ def tenant_home(request,schema_name):
         
         # Get pending HR applications
         pending_hr_approvals = HRApproval.objects.filter(status='PENDING').count()
+        print(f"[DEBUG tenant_home] pending_hr_approvals = {pending_hr_approvals} (queried on schema '{actual_schema}')")
         
         # Get statistics
         total_employees = EmployeeProfile.objects.count()
         total_hrs = HRProfile.objects.count()
         total_departments = departments.count()
+        print(f"[DEBUG tenant_home] total_employees={total_employees}, total_hrs={total_hrs}, total_departments={total_departments}")
         
         # Get recent activity (last 7 days)
         seven_days_ago = datetime.now() - timedelta(days=7)
@@ -121,17 +134,33 @@ def hr_approval_list(request,schema_name):
         return HttpResponse("Access denied! Only tenant owners can access this page.")
     
     try:
-        # with use_public_schema(revert_schema_name=None,revert_schema=False):
-        #     print("using public schema to get tenant model")
-        #     from tenants.models import Tenants
-        #     tenant_obj=Tenants.objects.get(owner=request.user)
-        #     print(f"got subdomain : {tenant_obj.subdomain} and schema name : {tenant_obj.schema_name}")
-        
-        # schema_name,valid_tenant,subdomain=get_schema_name(subdomain=tenant_obj.subdomain)
         activate_tenant_schema(schema_name)
+
+        # ===== DEBUG: Verify active schema before HRApproval query =====
+        from django.db import connection
+        actual_schema = getattr(connection, 'schema_name', 'UNKNOWN')
+        print(f"[DEBUG hr_approval_list] URL schema_name param = '{schema_name}'")
+        print(f"[DEBUG hr_approval_list] connection.schema_name = '{actual_schema}'")
+        with connection.cursor() as cur:
+            cur.execute("SHOW search_path;")
+            db_search_path = cur.fetchone()
+            print(f"[DEBUG hr_approval_list] Postgres SHOW search_path = {db_search_path}")
+            # Check which tables exist in this schema
+            cur.execute("""
+                SELECT schemaname, tablename 
+                FROM pg_tables 
+                WHERE tablename = 'approvals_hrapproval'
+                ORDER BY schemaname;
+            """)
+            hr_tables = cur.fetchall()
+            print(f"[DEBUG hr_approval_list] approvals_hrapproval table exists in schemas: {hr_tables}")
+        # ===== END DEBUG =====
 
         # Get pending HR applications
         pending_hrs = HRApproval.objects.filter(status='PENDING').order_by('-applied_at')
+        print(f"[DEBUG hr_approval_list] Found {pending_hrs.count()} pending HR approvals on schema '{actual_schema}'")
+        for hr in pending_hrs:
+            print(f"[DEBUG hr_approval_list]   -> HR: {hr.username} | applied_at: {hr.applied_at}")
         
         # Get recently reviewed applications (last 20)
         reviewed_hrs = HRApproval.objects.filter(
