@@ -254,7 +254,7 @@ def hr_approval_detail(request,schema_name, application_id):
                 
                 
                 
-                return redirect('hr-approval-list')
+                return redirect('hr-approval-list',schema_name=schema_name)
             
             elif action == 'reject':
                 rejection_reason = request.POST.get('rejection_reason', 'Not specified')
@@ -270,7 +270,7 @@ def hr_approval_detail(request,schema_name, application_id):
                 # Delete the rejected application after email is sent
                 hr_application.delete()
                 
-                return redirect('hr-approval-list')
+                return redirect('hr-approval-list',schema_name=schema_name)
         
         # Get requested departments
         managed_departments = hr_application.requested_departments.all()
