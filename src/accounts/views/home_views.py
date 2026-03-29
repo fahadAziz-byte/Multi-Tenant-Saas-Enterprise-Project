@@ -180,7 +180,7 @@ def hr_home(request):
             status='PENDING',
             employee__in=accessible_employees
         ).select_related('employee__account__user', 'employee__department')[:5]
-        
+        pending_employee_approvals = EmployeeApproval.objects.filter(status='PENDING').count()
         # Get department info for display
         if hr_profile.is_admin:
             managed_departments = "All Departments (Admin)"
@@ -203,6 +203,7 @@ def hr_home(request):
             'on_leave_today': on_leave_today,
             'not_marked_today': not_marked_today,
             'recent_requests': recent_requests,
+            'pending_employee_approvals': pending_employee_approvals,
         }
         
         return render(request, 'accounts/hr/hr_home.html', context)
