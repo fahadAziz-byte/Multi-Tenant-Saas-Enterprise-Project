@@ -110,7 +110,6 @@
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="#features" class="text-gray-600 hover:text-indigo-600 transition font-medium">Features</a>
                     <a href="#how-it-works" class="text-gray-600 hover:text-indigo-600 transition font-medium">How It Works</a>
-                    <a href="#pricing" class="text-gray-600 hover:text-indigo-600 transition font-medium">Pricing</a>
                     <a href="{% if error_message %}{{ main_host_url }}{% endif %}{% url 'loginn' %}"class="text-gray-600 hover:text-indigo-600 transition font-medium">Login</a>
                     <a href="{% url 'signupp' %}" class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-6 py-2 rounded-lg hover:from-indigo-700 hover:to-blue-700 transition font-semibold shadow-lg hover:shadow-xl">
                         Start Free Trial
@@ -233,7 +232,7 @@
                         </p>
                         <div class="bg-white border-2 border-yellow-300 rounded-lg p-4">
                             <p class="text-sm font-semibold text-gray-700 mb-2">Example:</p>
-                            <code class="text-indigo-600 font-mono">yourcompany.localhost:8000/users/user-login/</code>
+                            <code class="text-indigo-600 font-mono">yourcompany.scalesphere.space/users/user-login/</code>
                         </div>
                         <p class="text-sm text-yellow-700 mt-3">
                             Don't have access yet? Contact your organization's administrator or 
@@ -359,7 +358,7 @@
                         <div class="inline-block bg-indigo-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mb-4">1</div>
                         <h3 class="text-3xl font-bold text-gray-900 mb-4">Tenant Owner Signs Up</h3>
                         <p class="text-lg text-gray-600 leading-relaxed">
-                            Organization owner creates an account on the main domain. A unique subdomain is generated (e.g., <code class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded">yourcompany.localhost:8000</code>). Complete data isolation is established with a dedicated database schema.
+                            Organization owner creates an account on the main domain. A unique subdomain is generated (e.g., <code class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded">yourcompany.scalesphere.space</code>). Complete data isolation is established with a dedicated database schema.
                         </p>
                     </div>
                     <div class="md:w-1/2">
