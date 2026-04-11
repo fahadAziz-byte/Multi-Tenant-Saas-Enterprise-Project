@@ -356,7 +356,7 @@ def hr_employee_approval_detail(request, application_id):
                 # except Exception as e:
                 #    print(f"[ERROR] Failed to send approval email: {e}")
                 
-                return redirect('hr-employee-approvals')
+                return redirect('hr_employee_approvals')
             
             elif action == 'reject':
                 rejection_reason = request.POST.get('rejection_reason', 'Not specified')
@@ -399,7 +399,7 @@ def hr_employee_approval_detail(request, application_id):
                 # Delete the rejected application
                 employee_application.delete()
                 
-                return redirect('hr-employee-approvals')
+                return redirect('hr_employee_approvals')
         
         context = {
             'tenant_name': request.subdomain,

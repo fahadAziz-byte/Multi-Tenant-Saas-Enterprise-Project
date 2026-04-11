@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from datetime import date
 from .views import get_tenant_from_subdomain
 from accounts.models import HRProfile, EmployeeProfile,Account,Department
+from approvals.models import EmployeeApproval,HRApproval
 from attendance.models import Attendance, AttendanceRequest
 from datetime import datetime, timedelta
 from django.db.models import Count
