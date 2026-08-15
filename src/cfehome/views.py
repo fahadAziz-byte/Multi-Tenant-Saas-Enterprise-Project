@@ -10,6 +10,13 @@ LOGIN_URL = settings.LOGIN_URL
 
 this_dir = pathlib.Path(__file__).resolve().parent
 
+def health_check(request):
+    """
+    Lightweight health check endpoint for Render / UptimeRobot.
+    Bypasses database queries and connections to conserve DB limits.
+    """
+    return HttpResponse("OK", content_type="text/plain", status=200)
+
 #hello claude can you give me front page for my website i mean when user simply types my website i should display something there i mean it should be beautiful and also tells what out website provides for enterprise and their owners and their employees and hrs and how we validate them and we switch tenants please make it look professional and also an option to signup and instruction for employees and hrs if the current request has no subdomain then it should show for employees and hrs to login with their enterprise subdomain  with following logicclass 
 def LandingPageView(request):
     """Main landing page for the platform"""

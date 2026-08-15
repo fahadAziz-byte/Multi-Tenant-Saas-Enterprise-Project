@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import LandingPageView
+from .views import LandingPageView, health_check
+
 urlpatterns = [
+    path('health/', health_check, name='health_check'),
     path('', LandingPageView ,name='landingpage'),
     path('users/', include('accounts.urls')),
     path('users/', include('allauth.urls')),

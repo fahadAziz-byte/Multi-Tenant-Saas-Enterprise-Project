@@ -7,6 +7,11 @@ class SchemaTenantMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        if request.path.rstrip('/') == '/health':
+            request.subdomain = None
+            request.valid_tenant = True
+            return self.get_response(request)
+
         host = request.get_host().split(':')[0]
 
         parts = host.split('.')
